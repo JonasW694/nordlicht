@@ -1,6 +1,6 @@
 // Service Worker: App offline verfügbar machen und besuchte Kartenkacheln zwischenspeichern
-const SHELL = "nlr-shell-v3";
-const TILES = "nlr-tiles-v3";
+const SHELL = "nlr-shell-v4";
+const TILES = "nlr-tiles-v4";
 const MAX_TILES = 1500;
 const SHELL_FILES = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 

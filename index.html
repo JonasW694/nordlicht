@@ -778,6 +778,52 @@ header{position:relative}
 .pigrid b{font-size:16px}.pigrid div{padding:5px 8px}
 .pibtns{margin:0 0 8px}.pibtns .btn{padding:6px 9px;font-size:12px}
 .leaflet-control-attribution{font-size:9px!important;line-height:1.3;max-width:70%;background:rgba(255,255,255,.6)!important}
+
+.moonline{margin:10px 0 0}
+.spark{width:100%;height:60px;display:block;margin-top:4px}
+.sparklabel{display:flex;justify-content:space-between;margin:2px 0 10px}
+.sliderrow{display:flex;align-items:center;gap:10px;margin:12px 0 4px}
+.sliderrow input{flex:1;accent-color:#5cf2a0}
+#hourLabel{min-width:120px;text-align:right;font-weight:600;font-size:14px}
+.bestbox{background:rgba(92,242,160,.1);border:1px solid rgba(92,242,160,.4);border-radius:12px;padding:10px;margin:10px 0;font-size:14px}
+.pbars{display:flex;gap:3px;align-items:flex-end;margin-top:8px;overflow-x:auto}
+.pbar{flex:1 0 20px;height:70px;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:6px;position:relative;cursor:pointer;padding:0;display:flex;align-items:flex-end;justify-content:center}
+.pbar .pfill{position:absolute;bottom:0;left:2px;right:2px;background:linear-gradient(#5cf2a0,#2a8f5c);border-radius:4px}
+.pbar .phere{position:absolute;bottom:0;left:35%;right:35%;background:#2f8cff;border-radius:3px}
+.pbar i{position:absolute;bottom:-17px;font-style:normal;font-size:10px;color:var(--muted)}
+.pbar.sel{border-color:#fff}.pbar.best{box-shadow:0 0 0 2px #ffd166}
+.pbars{padding-bottom:20px}
+.gapicon.best span{background:#ffd166;width:30px;height:30px;font-size:16px}
+.spoticon{background:none;border:0}.spoticon span{display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#ff5d8f;color:#fff;font-size:13px;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.spot{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-bottom:8px}
+.spotmain{flex:1;min-width:0;cursor:pointer}.spotmain b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.spotval{display:flex;flex-direction:column;align-items:center;min-width:52px}.spotval span{font-weight:700}.spotval i{font-style:normal;font-size:10px;color:var(--muted)}
+.del{min-width:34px}.del.confirm{color:#ffb4ae;border-color:#e2554d}
+#spotSave{display:inline-flex;gap:6px;align-items:center}
+#spotSave input{width:110px;background:#0b1220;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:5px 7px;font:inherit;font-size:12px}
+.okmsg{color:#5cf2a0;font-size:12px}
+.sub3{font-size:13px;margin:14px 0 6px;color:var(--text)}
+.stations{display:grid;gap:6px}
+.station{border:1px solid var(--line);border-radius:10px;padding:7px 9px;font-size:13px}
+.station.warn{border-color:#f0a03a}.station.bad{border-color:#e2554d}
+.dset{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:13px;margin-bottom:8px}
+.dset input{width:64px;background:#0b1220;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:5px 7px;font:inherit}
+.tblwrap{overflow-x:auto}
+.tbl{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums}
+.tbl th{font-weight:600;color:var(--muted);text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap}
+.tbl tr.ok td:first-child{box-shadow:inset 3px 0 #2fd27a}.tbl tr.warn td:first-child{box-shadow:inset 3px 0 #f0a03a}.tbl tr.bad td:first-child{box-shadow:inset 3px 0 #e2554d}
+.seg{display:flex;background:#0b1220;border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px;margin-bottom:10px}
+.seg button{flex:1;background:none;border:0;color:var(--muted);padding:7px 4px;border-radius:7px;font:inherit;font-size:13px;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--text);box-shadow:0 0 0 1px var(--line)}
+.camgrid{display:grid;gap:10px}
+@media(min-width:760px){.camgrid{grid-template-columns:1fr 1fr}}
+.cam{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.cam h3{margin:0 0 8px;font-size:15px}
+.camvals{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:6px}
+.camvals div{background:rgba(255,255,255,.04);border-radius:8px;padding:6px 8px;display:flex;flex-direction:column}
+.camvals span{font-size:11px;color:var(--muted)}.camvals b{font-size:16px}
+.tips{padding-left:18px;margin:6px 0 0}.tips li{margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -803,14 +849,19 @@ header{position:relative}
 <main>
   <section class="card"><h2>Polarlicht jetzt</h2><div id="auroraCard"></div></section>
 
-  <section class="card"><h2>Wolkenlücke finden</h2>
+  <section class="card"><h2>Sonnenwind (Frühwarnung)</h2><div id="swCard"></div></section>
+
+  <section class="card wide"><h2>Wolken &amp; Nacht planen</h2>
     <div class="gapctl">
-      <button class="btn" id="gapBtn">Wolkenlücke suchen</button>
+      <button class="btn" id="gapBtn">Wolken &amp; Nacht planen</button>
       <select id="radiusSel" aria-label="Suchradius">
         <option value="25">25 km</option>
         <option value="50" selected>50 km</option>
         <option value="100">100 km</option>
       </select>
+    </div>
+    <div id="plannerCtl" hidden>
+      <div class="sliderrow"><input type="range" id="hourSlider" min="0" max="15" step="1" value="0" aria-label="Uhrzeit"><span id="hourLabel">jetzt</span></div>
     </div>
     <div id="gapResult"></div>
   </section>
@@ -822,11 +873,20 @@ header{position:relative}
   <section class="card"><h2>Kp-Vorhersage (NOAA)</h2><div id="kpCard"></div></section>
 
   <section class="card wide"><h2>Drohne – darf ich hier fliegen?</h2><div id="droneCard"></div></section>
+
+  <section class="card wide"><h2>Drohnen-Planer</h2><div id="dronePlan"></div></section>
+
+  <section class="card wide"><h2>Straßen (Norwegen)</h2><div id="roadCard"></div></section>
+
+  <section class="card wide"><h2>Meine Orte</h2><div id="spotsCard"></div></section>
+
+  <section class="card wide"><h2>Kamera-Hilfe</h2><div id="camCard"></div></section>
 </main>
 
 <footer>
   Daten: Polarlicht und Kp von <a href="https://www.swpc.noaa.gov/products/aurora-30-minute-forecast">NOAA SWPC</a> ·
   Wetter von <a href="https://open-meteo.com/">Open-Meteo.com</a> (CC BY 4.0) ·
+  Straßenmeldungen © Statens vegvesen (NLOD) ·
   Karte © <a href="https://www.kartverket.no/">Kartverket</a> / OpenStreetMap · Ortssuche: Nominatim ·
   Schutzgebiete © Miljødirektoratet (Naturbase), Europäische Umweltagentur (EEA) · UAS-Gebiete Deutschland © DFS (dipul) · Flugplätze: OurAirports.
   Alle Angaben ohne Gewähr, besonders die Drohnenzonen. Vor jedem Flug die offiziellen Karten prüfen.
@@ -1020,9 +1080,9 @@ function auroraFor(ov, lat, lon) {
   return { local, eff, src };
 }
 
-// Sichtbarkeits-Schätzung: P = P_OVATION,eff · (1 − C/100 %) · f_dunkel
-function visibility(pOv, cloudPct, elev) {
-  return pOv * (1 - clamp(cloudPct, 0, 100) / 100) * darkFactor(elev);
+// Sichtbarkeits-Schätzung: P = P_OVATION,eff · (1 − C/100 %) · f_dunkel · f_Mond
+function visibility(pOv, cloudPct, elev, fMoon = 1) {
+  return pOv * (1 - clamp(cloudPct, 0, 100) / 100) * darkFactor(elev) * fMoon;
 }
 
 // ---------- Wetter (Open-Meteo) ----------
@@ -1034,8 +1094,8 @@ function meteoURL(lats, lons, full) {
     wind_speed_unit: "ms",
   });
   if (full) {
-    p.set("current", "cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,temperature_2m,apparent_temperature,wind_speed_10m,wind_gusts_10m,wind_direction_10m,precipitation,visibility");
-    p.set("hourly", "cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,temperature_2m,wind_gusts_10m");
+    p.set("current", "cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,temperature_2m,apparent_temperature,wind_speed_10m,wind_gusts_10m,wind_direction_10m,wind_speed_120m,precipitation,visibility");
+    p.set("hourly", "cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,temperature_2m,wind_gusts_10m,wind_speed_80m,wind_speed_120m,precipitation");
     p.set("forecast_hours", "16");
   } else {
     p.set("current", "cloud_cover,cloud_cover_low,cloud_cover_mid");
@@ -1269,6 +1329,8 @@ function initMap() {
       .addTo(layers.airports);
   }
   layers.aurora = L.layerGroup();
+  layers.roads = L.layerGroup().addTo(map);
+  layers.spots = L.layerGroup().addTo(map);
   layers.clouds = L.layerGroup();
   layers.gaps = L.layerGroup().addTo(map);
   layers.airports.addTo(map);
@@ -1279,7 +1341,9 @@ function initMap() {
     { "Topokarte Norwegen (Kartverket)": baseLayers.topo, "OpenStreetMap": baseLayers.osm },
     {
       "Polarlicht-Oval (OVATION)": layers.aurora,
-      "Wolken im Umkreis": layers.clouds,
+      "Wolken (Zeitschieber)": layers.clouds,
+      "Meine Orte": layers.spots,
+      "Straßen Norwegen": layers.roads,
       "Wolkenlücken": layers.gaps,
       "Drohnen: Flugplätze": layers.airports,
       "Drohnen: Schutzgebiete": layers.protected,
@@ -1379,6 +1443,7 @@ async function loadVern() {
     state.country = c.cc; state.countryName = c.name;
     applyCountryToMap();
   }
+  loadRoads();
   try { state.vern = await queryProtected(p.lat, p.lon, state.country); }
   catch (e) { state.vern = { error: e.message || String(e) }; }
   if (state.pos !== p) return;
@@ -1388,55 +1453,10 @@ async function loadVern() {
 
 async function refreshAll() {
   $("#refreshBtn").classList.add("spin");
-  await Promise.all([loadOvation(), loadKp(), loadWeather()]);
+  await Promise.all([loadOvation(), loadKp(), loadWeather(), loadSolarWind()]);
+  if (getSpots().length) loadSpots();
   $("#refreshBtn").classList.remove("spin");
   render();
-}
-
-// ---------- Wolkenlücken-Suche ----------
-async function findGaps() {
-  const p = state.pos;
-  if (!p) return;
-  const R = parseFloat($("#radiusSel").value);
-  const btn = $("#gapBtn");
-  btn.disabled = true; btn.textContent = "Suche läuft …";
-  const pts = [];
-  const n = 4; // Raster (2n+1)² Punkte
-  const step = R / n;
-  for (let i = -n; i <= n; i++) for (let j = -n; j <= n; j++) {
-    const dy = i * step, dx = j * step;
-    if (Math.hypot(dx, dy) > R + 0.01) continue;
-    const lat = p.lat + dy / 111.32;
-    const lon = p.lon + dx / (111.32 * Math.cos(rad(p.lat)));
-    pts.push({ lat, lon });
-  }
-  try {
-    const res = await getJSON(meteoURL(pts.map((q) => q.lat), pts.map((q) => q.lon), false), 30000);
-    const arr = Array.isArray(res) ? res : [res];
-    const now = new Date();
-    const out = [];
-    arr.forEach((r, k) => {
-      const q = pts[k];
-      const cc = r.current?.cloud_cover;
-      if (cc == null) return;
-      const elev = sunElevation(now, q.lat, q.lon);
-      const aur = state.ovation ? auroraFor(state.ovation, q.lat, q.lon).eff : null;
-      const pVis = aur == null ? null : visibility(aur, cc, elev);
-      const hourly = r.hourly?.cloud_cover || [];
-      out.push({
-        ...q, cc, low: r.current.cloud_cover_low, mid: r.current.cloud_cover_mid,
-        d: distKm(p.lat, p.lon, q.lat, q.lon), b: bearingDeg(p.lat, p.lon, q.lat, q.lon),
-        land: (r.elevation ?? 1) > 0, elevM: r.elevation, pVis, aur,
-        trend: hourly.slice(1, 4),
-      });
-    });
-    state.gaps = { t: Date.now(), R, pts: out };
-    save("gaps", { pos: p, g: state.gaps });
-  } catch (e) {
-    state.gaps = { error: e.message || String(e) };
-  }
-  btn.disabled = false; btn.textContent = "Wolkenlücke suchen";
-  renderGaps();
 }
 
 // ---------- Darstellung ----------
@@ -1463,10 +1483,14 @@ function chanceText(p) {
 function render() {
   renderStatus();
   renderAurora();
+  renderSolarWind();
   renderTimeline();
   renderKp();
   renderDrone();
+  renderDronePlanner();
   renderGaps();
+  renderSpots();
+  renderCamera();
 }
 
 function renderStatus() {
@@ -1494,7 +1518,8 @@ function renderAurora() {
   const fd = darkFactor(elev);
   const cc = w?.current?.cloud_cover;
   const aur = ov ? auroraFor(ov, p.lat, p.lon) : null;
-  const pVis = aur && cc != null ? visibility(aur.eff, cc, elev) : null;
+  const mi = moonInfo(now, p.lat, p.lon);
+  const pVis = aur && cc != null ? visibility(aur.eff, cc, elev, mi.factor) : null;
   const srcTxt = aur && aur.eff < 1 ? "Gerade keine Polarlicht-Aktivität in Sichtweite"
     : aur && aur.src.d > 20
     ? `stärkste Aktivität in Sichtweite: ${fmt(aur.src.v)} % in ${fmt(aur.src.d)} km Richtung ${compass(bearingDeg(p.lat, p.lon, aur.src.lat, aur.src.lon))}`
@@ -1510,9 +1535,10 @@ function renderAurora() {
       <div class="kv"><span>Bewölkung</span><b>${cc == null ? "–" : fmt(cc) + " %"}</b><em>${w ? `tief ${fmt(w.current.cloud_cover_low)} % · mittel ${fmt(w.current.cloud_cover_mid)} % · hoch ${fmt(w.current.cloud_cover_high)} %` : "lädt …"}</em></div>
       <div class="kv"><span>Dunkelheit</span><b>${fmt(fd * 100)} %</b><em>Sonne ${fmt(elev, 1)}° · ${darkLabel(elev)}</em></div>
     </div>
+    <p class="small moonline">🌙 ${moonText(mi)}.</p>
     ${aur ? `<p class="muted small">${srcTxt}. Schau Richtung Norden, wenn die Aktivität nördlich von dir liegt.</p>` : ""}
     <details class="small"><summary>Wie wird das berechnet?</summary>
-      <p>P<sub>sicht</sub> = P<sub>OVATION</sub> · (1 − C / 100 %) · f<sub>dunkel</sub>. P<sub>OVATION</sub> ist der NOAA-Wert über dir oder ein Wert bis ${HORIZON_KM} km entfernt, abgeschwächt mit der Entfernung (Polarlicht am Horizont). C ist die Gesamtbewölkung aus dem Wettermodell, f<sub>dunkel</sub> steigt von 0 (Sonne am Horizont) bis 1 (Sonne 12° unter dem Horizont). Mondlicht, Lichtverschmutzung und Wolkenlücken kleiner als das Modellraster (einige km) sind nicht berücksichtigt.</p>
+      <p>P<sub>sicht</sub> = P<sub>OVATION</sub> · (1 − C / 100 %) · f<sub>dunkel</sub> · f<sub>Mond</sub>. P<sub>OVATION</sub> ist der NOAA-Wert über dir oder ein Wert bis ${HORIZON_KM} km entfernt, abgeschwächt mit der Entfernung (Polarlicht am Horizont). C ist die Gesamtbewölkung aus dem Wettermodell, f<sub>dunkel</sub> steigt von 0 (Sonne am Horizont) bis 1 (Sonne 12° unter dem Horizont). f<sub>Mond</sub> = 1 − 0,6 · k · min(h/30°, 1) mit dem beleuchteten Anteil k und der Mondhöhe h, also bis 0,4 bei hohem Vollmond. Lichtverschmutzung und Wolkenlücken kleiner als das Modellraster (einige km) sind nicht berücksichtigt.</p>
     </details>`;
 }
 
@@ -1525,7 +1551,7 @@ function renderTimeline() {
     // Open-Meteo liefert bei timezone=auto lokale Zeit ohne Zone; utc_offset_seconds korrigiert
     const d = new Date(Date.parse(t + "Z") - (w.utc_offset_seconds || 0) * 1000);
     const elev = sunElevation(d, p.lat, p.lon);
-    const sky = (1 - h.cloud_cover[i] / 100) * darkFactor(elev);
+    const sky = (1 - h.cloud_cover[i] / 100) * darkFactor(elev) * moonFactor(d, p.lat, p.lon);
     return { d, cc: h.cloud_cover[i], low: h.cloud_cover_low[i], elev, sky, temp: h.temperature_2m[i] };
   }).filter((c) => c.d.getTime() > Date.now() - 3600 * 1000).slice(0, 14);
   const best = cells.reduce((a, b) => (b.sky > (a?.sky ?? -1) ? b : a), null);
@@ -1536,7 +1562,7 @@ function renderTimeline() {
         <b>${fmt(c.cc)}%</b><span>${c.d.toLocaleTimeString("de-DE", { hour: "2-digit" })}</span>
       </div>`).join("")}
     </div>
-    <p class="muted small">Balken = klare und dunkle Sicht (Wolken und Dunkelheit kombiniert), Zahl = Bewölkung.
+    <p class="muted small">Balken = klare und dunkle Sicht (Wolken, Dunkelheit und Mondlicht kombiniert), Zahl = Bewölkung.
     ${best && best.sky > 0.15 ? `Bestes Fenster: <b>${timeDE(best.d)} Uhr</b> mit ${fmt(best.cc)} % Bewölkung.` : "In den nächsten Stunden kein gutes Fenster am Standort, probiere die Wolkenlücken-Suche."}</p>`;
 }
 
@@ -1564,45 +1590,6 @@ function renderKp() {
       ${rows.map((r) => `<span class="kp" style="background:${r.kp >= 5 ? "#c0392b" : r.kp >= 4 ? "#d68910" : r.kp >= 3 ? "#5e9c2f" : "#2c3e50"}" title="${dateTimeDE(r.date)}">${fmt(r.kp, 1)}<i>${r.date.toLocaleTimeString("de-DE", { hour: "2-digit" })}</i></span>`).join("")}
     </div>`).join("") +
     `<p class="muted small">Kp-Index in 3-h-Blöcken (Ortszeit). ${kpHint(state.pos?.lat)}</p>`;
-}
-
-function renderGaps() {
-  const el = $("#gapResult");
-  layers.clouds?.clearLayers();
-  layers.gaps?.clearLayers();
-  const g = state.gaps, p = state.pos;
-  if (!g) { el.innerHTML = ""; return; }
-  if (g.error) { el.innerHTML = `<p class="err">Suche fehlgeschlagen: ${esc(g.error)}</p>`; return; }
-  for (const q of g.pts) {
-    L.circleMarker([q.lat, q.lon], { radius: 9, stroke: false, fillColor: cloudColor(q.cc), fillOpacity: 0.75 })
-      .bindTooltip(`${fmt(q.cc)} % Wolken`).addTo(layers.clouds);
-  }
-  layers.clouds.addTo(map);
-  if (posMarker) posMarker.bringToFront();
-  const here = g.pts.reduce((a, b) => (b.d < a.d ? b : a));
-  const cand = g.pts.filter((q) => q.land && q.d > 3);
-  const score = (q) => (q.pVis != null ? q.pVis : 100 - q.cc) - q.d * 0.01;
-  cand.sort((a, b) => score(b) - score(a));
-  const top = [];
-  for (const q of cand) { if (top.every((t) => distKm(t.lat, t.lon, q.lat, q.lon) > g.R / 3)) top.push(q); if (top.length === 3) break; }
-  top.forEach((q, i) => {
-    L.marker([q.lat, q.lon], { icon: L.divIcon({ className: "gapicon", html: `<span>${i + 1}</span>`, iconSize: [28, 28] }) })
-      .bindPopup(`<b>Wolkenlücke ${i + 1}</b><br>${fmt(q.cc)} % Wolken · ${fmt(q.d)} km ${compass(q.b)}<br>${navLinks(q.lat, q.lon)}`)
-      .addTo(layers.gaps);
-  });
-  if (top.length) map.fitBounds(L.latLngBounds([[p.lat, p.lon], ...top.map((q) => [q.lat, q.lon])]).pad(0.25));
-  const improve = top[0] ? here.cc - top[0].cc : 0;
-  el.innerHTML = `
-    <p class="small">Hier: <b>${fmt(here.cc)} %</b> Wolken. ${improve >= 15 ? `In der Nähe ist es deutlich klarer:` : `Im Umkreis von ${fmt(g.R)} km ist es kaum besser als hier.`}</p>
-    ${top.map((q, i) => `
-      <div class="gap">
-        <div class="gaphead"><span class="gapnum">${i + 1}</span>
-          <div><b>${fmt(q.cc)} % Wolken</b> · ${fmt(q.d)} km Luftlinie Richtung ${compass(q.b)}
-          <div class="muted small">tief ${fmt(q.low)} % · mittel ${fmt(q.mid)} %${q.pVis != null ? ` · Polarlicht-Chance ${fmt(q.pVis, 1)} %` : ""}${q.trend?.length ? ` · nächste Stunden: ${q.trend.map((x) => fmt(x) + " %").join(", ")}` : ""}</div></div>
-        </div>
-        <div class="row">${navLinks(q.lat, q.lon)}</div>
-      </div>`).join("")}
-    <p class="muted small">Punkte über dem Meer werden ausgelassen. Die Navigation führt zur nächsten Straße, die Fahrstrecke kann deutlich länger als die Luftlinie sein. Wolkenmodell mit einigen km Auflösung, kleine Lücken erkennt es nicht.</p>`;
 }
 
 // Gesamtbewertung Drohne für einen Punkt (für Karte unten und Infofenster)
@@ -1664,7 +1651,14 @@ async function showPlaceInfo(lat, lon) {
   infoMarker = L.circleMarker([lat, lon], { radius: 7, color: "#fff", weight: 2, fillColor: "#ff9f1c", fillOpacity: 1, interactive: false }).addTo(map);
   const popup = L.popup({ maxWidth: 300, minWidth: 240, maxHeight: Math.max(220, map.getSize().y - 120), autoPanPadding: [10, 10], className: "infopop" }).setLatLng([lat, lon]);
   const info = { name: null, country: null, countryName: null, w: null, wErr: null, prot: null, protErr: null };
-  const draw = () => { if (seq === infoSeq) popup.setContent(placeInfoHTML(lat, lon, info)); };
+  const draw = () => {
+    if (seq !== infoSeq) return;
+    const keep = document.getElementById("spotSave");
+    const keepHTML = keep && keep.querySelector("input, .okmsg") ? keep.innerHTML : null;
+    const val = document.getElementById("spotName")?.value;
+    popup.setContent(placeInfoHTML(lat, lon, info));
+    if (keepHTML) { const n = document.getElementById("spotSave"); if (n) { n.innerHTML = keepHTML; const i = document.getElementById("spotName"); if (i && val != null) i.value = val; } }
+  };
   draw();
   popup.openOn(map);
   popup.on("remove", () => { if (seq === infoSeq && infoMarker) { map.removeLayer(infoMarker); infoMarker = null; } });
@@ -1695,7 +1689,7 @@ function placeInfoHTML(lat, lon, info) {
   const elev = sunElevation(now, lat, lon);
   const aur = state.ovation ? auroraFor(state.ovation, lat, lon) : null;
   const c = info.w?.current;
-  const pVis = aur && c ? visibility(aur.eff, c.cloud_cover, elev) : null;
+  const pVis = aur && c ? visibility(aur.eff, c.cloud_cover, elev, moonFactor(now, lat, lon)) : null;
   const here = state.pos;
   const C = COUNTRIES[info.country];
   const A = info.country === null ? { level: "orange", title: "wird geprüft …", items: [] }
@@ -1709,6 +1703,7 @@ function placeInfoHTML(lat, lon, info) {
       <div class="row wrap pibtns">
         ${navLinks(lat, lon)}
         <button class="btn small ghost" onclick="useAsPosition(${lat},${lon})">Alles für hier</button>
+        <span id="spotSave"><button class="btn small ghost" onclick="showSpotForm(${lat},${lon},'${esc(info.name || "").replace(/'/g, "")}')">♥ Ort speichern</button></span>
       </div>
       <div class="pigrid">
         <div><span>Polarlicht sichtbar</span><b>${pVis == null ? (c ? "–" : "…") : fmt(pVis, pVis < 10 ? 1 : 0) + " %"}</b></div>
@@ -1743,7 +1738,7 @@ function setPosition(lat, lon, label, source, acc) {
   if (moved) {
     map.setView([lat, lon], Math.max(map.getZoom(), 9));
     state.gaps = null;
-    state.country = null; state.countryName = null;
+    state.country = null; state.countryName = null; state.roads = null;
     loadVern();
     loadWeather().then(render);
   } else render();
@@ -1798,6 +1793,7 @@ function init() {
   sel.addEventListener("change", () => choosePreset(sel.value));
   $("#refreshBtn").addEventListener("click", () => { refreshAll(); if (state.pos) loadVern(); });
   $("#gapBtn").addEventListener("click", findGaps);
+  $("#hourSlider").addEventListener("input", (e) => setHour(+e.target.value));
   $("#searchForm").addEventListener("submit", (e) => { e.preventDefault(); runSearch(); });
   $("#nightBtn").addEventListener("click", () => {
     document.body.classList.toggle("redmode");
@@ -1818,6 +1814,7 @@ function init() {
     loadVern();
   }
   render();
+  loadSpots();
   startGPS();
   refreshAll();
   setInterval(() => { if (document.visibilityState === "visible") refreshAll(); }, REFRESH_MS);
@@ -1831,7 +1828,617 @@ function init() {
 if (typeof window !== "undefined" && typeof document !== "undefined" && !window.__NLR_TEST__) {
   document.addEventListener("DOMContentLoaded", init);
 }
-if (typeof module !== "undefined") module.exports = { sunElevation, darkFactor, parseOvation, auroraFor, visibility, parseKp, distKm, bearingDeg, nearestAirfields, airfieldCheck, protectedRule, guessCountry, meteoURL };
+if (typeof module !== "undefined") module.exports = { visibility2: visibility, sunElevation, darkFactor, parseOvation, auroraFor, visibility, parseKp, distKm, bearingDeg, nearestAirfields, airfieldCheck, protectedRule, guessCountry, meteoURL };
+</script>
+<script>"use strict";
+/* Nordlicht-Radar – Erweiterungen: Mond, Sonnenwind, Nachtplanung, Straßen (NO), Drohnen-Planer, Lieblingsorte, Kamera-Hilfe */
+
+const URL_RTSW_MAG = "https://services.swpc.noaa.gov/json/rtsw/rtsw_mag_1m.json";
+const URL_RTSW_WIND = "https://services.swpc.noaa.gov/json/rtsw/rtsw_wind_1m.json";
+const URL_VEGVESEN_WFS = "https://ogckart-sn1.atlas.vegvesen.no/datex_3_1/wfs";
+const L1_KM = 1.5e6; // Entfernung des Messpunkts L1 von der Erde
+
+// =====================================================================
+// Mond (Formeln nach SunCalc / Meeus, vereinfacht)
+// =====================================================================
+const OBLIQ = rad(23.4397);
+function toDays(date) { return date.getTime() / 86400000 + 2440587.5 - 2451545; }
+function raOf(l, b) { return Math.atan2(Math.sin(l) * Math.cos(OBLIQ) - Math.tan(b) * Math.sin(OBLIQ), Math.cos(l)); }
+function decOf(l, b) { return Math.asin(Math.sin(b) * Math.cos(OBLIQ) + Math.cos(b) * Math.sin(OBLIQ) * Math.sin(l)); }
+function moonCoords(d) {
+  const L = rad(218.316 + 13.176396 * d), M = rad(134.963 + 13.064993 * d), F = rad(93.272 + 13.22935 * d);
+  const l = L + rad(6.289) * Math.sin(M), b = rad(5.128) * Math.sin(F), dist = 385001 - 20905 * Math.cos(M);
+  return { ra: raOf(l, b), dec: decOf(l, b), dist };
+}
+function sunCoords(d) {
+  const M = rad(357.5291 + 0.98560028 * d);
+  const C = rad(1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M));
+  const L = M + C + rad(102.9372) + Math.PI;
+  return { ra: raOf(L, 0), dec: decOf(L, 0) };
+}
+function moonPosition(date, lat, lon) {
+  const d = toDays(date), c = moonCoords(d);
+  const H = rad(280.16 + 360.9856235 * d) + rad(lon) - c.ra;
+  const phi = rad(lat);
+  let h = Math.asin(Math.sin(phi) * Math.sin(c.dec) + Math.cos(phi) * Math.cos(c.dec) * Math.cos(H));
+  h += rad(0.017) / Math.tan(h + rad(10.26) / (h + rad(5.10))); // Refraktion (grob)
+  const az = Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(c.dec) * Math.cos(phi));
+  return { alt: deg(h), az: (deg(az) + 180) % 360 };
+}
+function moonIllumination(date) {
+  const d = toDays(date), s = sunCoords(d), m = moonCoords(d), sdist = 149598000;
+  const phi = Math.acos(Math.sin(s.dec) * Math.sin(m.dec) + Math.cos(s.dec) * Math.cos(m.dec) * Math.cos(s.ra - m.ra));
+  const inc = Math.atan2(sdist * Math.sin(phi), m.dist - sdist * Math.cos(phi));
+  const angle = Math.atan2(Math.cos(s.dec) * Math.sin(s.ra - m.ra), Math.sin(s.dec) * Math.cos(m.dec) - Math.cos(s.dec) * Math.sin(m.dec) * Math.cos(s.ra - m.ra));
+  return { fraction: (1 + Math.cos(inc)) / 2, phase: 0.5 + (0.5 * inc * (angle < 0 ? -1 : 1)) / Math.PI };
+}
+function moonPhaseName(p) {
+  if (p < 0.03 || p > 0.97) return "Neumond";
+  if (p < 0.22) return "zunehmende Sichel";
+  if (p < 0.28) return "erstes Viertel";
+  if (p < 0.47) return "zunehmender Mond";
+  if (p < 0.53) return "Vollmond";
+  if (p < 0.72) return "abnehmender Mond";
+  if (p < 0.78) return "letztes Viertel";
+  return "abnehmende Sichel";
+}
+// Mondlicht-Faktor: 1 = stört nicht, bis 0,4 bei hohem Vollmond (grobe Näherung)
+function moonFactor(date, lat, lon) {
+  const p = moonPosition(date, lat, lon), k = moonIllumination(date).fraction;
+  return 1 - 0.6 * k * clamp(p.alt / 30, 0, 1);
+}
+// Auf- und Untergang in den nächsten 24 h (Abtastung alle 5 min)
+function moonRiseSet(date, lat, lon) {
+  let prev = moonPosition(date, lat, lon).alt, rise = null, set = null;
+  for (let m = 5; m <= 24 * 60; m += 5) {
+    const t = new Date(date.getTime() + m * 60000), a = moonPosition(t, lat, lon).alt;
+    if (prev < 0 && a >= 0 && !rise) rise = t;
+    if (prev >= 0 && a < 0 && !set) set = t;
+    prev = a;
+  }
+  return { rise, set };
+}
+function moonInfo(date, lat, lon) {
+  const pos = moonPosition(date, lat, lon), ill = moonIllumination(date), rs = moonRiseSet(date, lat, lon);
+  return { ...pos, fraction: ill.fraction, phase: ill.phase, name: moonPhaseName(ill.phase), rise: rs.rise, set: rs.set, factor: moonFactor(date, lat, lon) };
+}
+function moonText(mi) {
+  const up = mi.alt > 0;
+  const rs = up ? (mi.set ? `geht um ${timeDE(mi.set)} unter` : "geht in den nächsten 24 h nicht unter") : (mi.rise ? `geht um ${timeDE(mi.rise)} auf` : "geht in den nächsten 24 h nicht auf");
+  const effect = !up ? "stört gerade nicht" : mi.factor < 0.6 ? "hellt den Himmel stark auf" : mi.factor < 0.85 ? "hellt den Himmel etwas auf" : "stört kaum";
+  return `${mi.name}, ${fmt(mi.fraction * 100)} % beleuchtet, ${up ? fmt(mi.alt) + "° hoch" : "unter dem Horizont"}, ${rs} – ${effect}`;
+}
+
+// =====================================================================
+// Sonnenwind (NOAA, Echtzeit am Messpunkt L1)
+// =====================================================================
+async function loadSolarWind() {
+  try {
+    const [mag, wind] = await Promise.all([getJSON(URL_RTSW_MAG), getJSON(URL_RTSW_WIND)]);
+    const since = Date.now() - 3 * 3600 * 1000;
+    const ts = (r) => Date.parse(r.time_tag + "Z");
+    const m = mag.filter((r) => r.active && r.bz_gsm != null && ts(r) > since).sort((a, b) => ts(a) - ts(b));
+    const w = wind.filter((r) => r.active && r.proton_speed != null && ts(r) > since).sort((a, b) => ts(a) - ts(b));
+    state.sw = { m, w, t: Date.now() };
+    state.errors.sw = null;
+    save("sw", { m: m.slice(-180), w: w.slice(-180), t: Date.now() });
+  } catch (e) {
+    state.errors.sw = e.message || String(e);
+    if (!state.sw) { const c = load("sw"); if (c) state.sw = { ...c, cached: true }; }
+  }
+}
+function swSummary() {
+  const sw = state.sw;
+  if (!sw?.m?.length) return null;
+  const last = sw.m[sw.m.length - 1], lastW = sw.w[sw.w.length - 1];
+  const recent = sw.m.filter((r) => Date.parse(r.time_tag + "Z") > Date.parse(last.time_tag + "Z") - 30 * 60000);
+  const bz30 = recent.reduce((s, r) => s + r.bz_gsm, 0) / recent.length;
+  const v = lastW?.proton_speed ?? null;
+  const delay = v ? L1_KM / v / 60 : null;
+  let level, text;
+  if (bz30 <= -10) { level = 3; text = "Stark südlich ausgerichtet – sehr gute Bedingungen, kräftige Polarlichter wahrscheinlich"; }
+  else if (bz30 <= -5) { level = 2; text = "Deutlich südlich – gute Bedingungen, Aktivität nimmt meist zu"; }
+  else if (bz30 <= -2) { level = 1; text = "Leicht südlich – etwas Aktivität möglich"; }
+  else { level = 0; text = bz30 > 2 ? "Nördlich ausgerichtet – eher ruhig" : "Neutral – eher ruhig"; }
+  if (v && v > 550 && level > 0) text += ", schneller Sonnenwind verstärkt das";
+  return { bz: last.bz_gsm, bz30, bt: last.bt, v, n: lastW?.proton_density ?? null, delay, level, text, time: new Date(Date.parse(last.time_tag + "Z")) };
+}
+function sparkline(values, { w = 300, h = 60, zero = true, color = "#5cf2a0" } = {}) {
+  if (values.length < 2) return "";
+  const min = Math.min(...values, zero ? 0 : Infinity), max = Math.max(...values, zero ? 0 : -Infinity);
+  const span = max - min || 1;
+  const x = (i) => (i / (values.length - 1)) * w, y = (v) => h - ((v - min) / span) * h;
+  const pts = values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+  const z = zero ? `<line x1="0" x2="${w}" y1="${y(0)}" y2="${y(0)}" stroke="#8d9ab0" stroke-dasharray="3 3" stroke-width="1"/>` : "";
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" class="spark">${z}<polyline fill="none" stroke="${color}" stroke-width="2" points="${pts}"/></svg>`;
+}
+function renderSolarWind() {
+  const el = $("#swCard");
+  if (!el) return;
+  const s = swSummary();
+  if (!s) { el.innerHTML = `<p class="muted small">${state.errors.sw ? "Sonnenwind-Daten nicht verfügbar." : "lädt …"}</p>`; return; }
+  const bzSeries = state.sw.m.filter((_, i, a) => i % 2 === 0 || i === a.length - 1).map((r) => r.bz_gsm);
+  const col = ["#9aa7b8", "#e8e36a", "#7dff5a", "#ff3df5"][s.level];
+  el.innerHTML = `
+    <div class="big"><div class="bignum" style="color:${col}">${fmt(s.bz30, 1)}</div>
+      <div><div class="biglabel">Bz in nT (Mittel 30 min)</div><div class="muted small">${esc(s.text)}</div></div></div>
+    ${sparkline(bzSeries.map((v) => -v), { color: col })}
+    <div class="muted small sparklabel"><span>vor 3 h</span><span>Bz (nach oben = südlich = günstig)</span><span>jetzt</span></div>
+    <div class="grid3">
+      <div class="kv"><span>Geschwindigkeit</span><b>${s.v ? fmt(s.v) + " km/s" : "–"}</b><em>${s.v > 500 ? "schnell" : "normal"}</em></div>
+      <div class="kv"><span>Dichte</span><b>${s.n != null ? fmt(s.n, 1) + " /cm³" : "–"}</b><em>Teilchen</em></div>
+      <div class="kv"><span>Ankunft an der Erde</span><b>${s.delay ? "≈ " + fmt(s.delay) + " min" : "–"}</b><em>Messung ${timeDE(s.time)}${state.sw.cached ? " (gespeichert)" : ""}</em></div>
+    </div>
+    <p class="muted small">Gemessen am Punkt L1, etwa 1,5 Mio. km vor der Erde. Was hier jetzt ankommt, erreicht die Erde erst nach der angegebenen Zeit. Ein länger anhaltend negatives Bz ist das beste Frühwarnzeichen.</p>`;
+}
+
+// =====================================================================
+// Nachtplanung: Wolkenkarte mit Zeitschieber (ersetzt die einfache Wolkenlücken-Suche)
+// =====================================================================
+function kpNeeded(lat) {
+  if (lat >= 66) return 2;
+  if (lat >= 62) return 3.5;
+  if (lat >= 57) return 5;
+  return 6.5;
+}
+function kpAt(date) {
+  const kp = state.kp;
+  if (!kp?.length) return null;
+  let best = null;
+  for (const r of kp) { if (r.date.getTime() <= date.getTime()) best = r; }
+  return best ? best.kp : kp[0].kp;
+}
+// Polarlicht-Faktor aus Kp (für Stunden, die OVATION nicht abdeckt)
+function kpFactor(kp, lat) {
+  if (kp == null) return 0.5;
+  return clamp((kp - kpNeeded(lat) + 2) / 4, 0.05, 1);
+}
+async function findGaps() {
+  const p = state.pos;
+  if (!p) return;
+  const R = parseFloat($("#radiusSel").value);
+  const btn = $("#gapBtn");
+  btn.disabled = true; btn.textContent = "Lädt …";
+  const pts = [];
+  const n = 4, step = R / n;
+  for (let i = -n; i <= n; i++) for (let j = -n; j <= n; j++) {
+    const dy = i * step, dx = j * step;
+    if (Math.hypot(dx, dy) > R + 0.01) continue;
+    pts.push({ lat: p.lat + dy / 111.32, lon: p.lon + dx / (111.32 * Math.cos(rad(p.lat))) });
+  }
+  try {
+    const q = new URLSearchParams({
+      latitude: pts.map((x) => x.lat.toFixed(4)).join(","), longitude: pts.map((x) => x.lon.toFixed(4)).join(","),
+      timezone: "auto", hourly: "cloud_cover,cloud_cover_low,cloud_cover_mid", forecast_hours: "16", current: "cloud_cover",
+    });
+    const res = await getJSON(`${URL_METEO}?${q.toString()}`, 30000);
+    const arr = Array.isArray(res) ? res : [res];
+    const off = (arr[0].utc_offset_seconds || 0) * 1000;
+    const times = arr[0].hourly.time.map((t) => new Date(Date.parse(t + "Z") - off));
+    const grid = arr.map((r, k) => ({
+      ...pts[k],
+      land: (r.elevation ?? 1) > 0,
+      d: distKm(p.lat, p.lon, pts[k].lat, pts[k].lon),
+      b: bearingDeg(p.lat, p.lon, pts[k].lat, pts[k].lon),
+      cc: r.hourly.cloud_cover, low: r.hourly.cloud_cover_low, mid: r.hourly.cloud_cover_mid,
+      ccNow: r.current?.cloud_cover,
+    }));
+    // Bewertung je Punkt und Stunde: klarer Himmel · Dunkelheit · Mond · Polarlicht-Aussicht
+    const ovNow = state.ovation;
+    for (const g of grid) {
+      g.score = times.map((t, h) => {
+        const sky = (1 - g.cc[h] / 100) * darkFactor(sunElevation(t, g.lat, g.lon)) * moonFactor(t, g.lat, g.lon);
+        const aur = h === 0 && ovNow ? clamp(auroraFor(ovNow, g.lat, g.lon).eff / 30, 0.05, 1) : kpFactor(kpAt(t), g.lat);
+        return sky * aur;
+      });
+      g.sky = times.map((t, h) => (1 - g.cc[h] / 100) * darkFactor(sunElevation(t, g.lat, g.lon)));
+    }
+    state.gaps = { t: Date.now(), R, step, times, grid, hour: 0 };
+    // bestes Paar aus Ort und Stunde (Landpunkte, kleine Strafe für Entfernung)
+    let best = null;
+    for (const g of grid) {
+      if (!g.land) continue;
+      g.score.forEach((s, h) => { const v = s - g.d * 0.0015; if (!best || v > best.v) best = { g, h, v, s }; });
+    }
+    state.gaps.best = best;
+    const slider = $("#hourSlider");
+    slider.max = String(times.length - 1); slider.value = "0";
+    $("#plannerCtl").hidden = false;
+  } catch (e) {
+    state.gaps = { error: e.message || String(e) };
+  }
+  btn.disabled = false; btn.textContent = "Wolken & Nacht planen";
+  renderGaps();
+}
+function renderGaps() {
+  const el = $("#gapResult");
+  layers.clouds?.clearLayers();
+  layers.gaps?.clearLayers();
+  const g = state.gaps, p = state.pos;
+  if (!g) { el.innerHTML = ""; $("#plannerCtl").hidden = true; return; }
+  if (g.error) { el.innerHTML = `<p class="err">Laden fehlgeschlagen: ${esc(g.error)}</p>`; return; }
+  const h = g.hour, t = g.times[h];
+  $("#hourLabel").textContent = h === 0 ? "jetzt" : `${t.toLocaleDateString("de-DE", { weekday: "short" })} ${timeDE(t)} Uhr (+${h} h)`;
+  // Wolkenraster für die gewählte Stunde
+  const dLat = g.step / 111.32 / 2;
+  for (const q of g.grid) {
+    const dLon = g.step / (111.32 * Math.cos(rad(q.lat))) / 2;
+    const c = q.cc[h];
+    L.rectangle([[q.lat - dLat, q.lon - dLon], [q.lat + dLat, q.lon + dLon]], {
+      stroke: false, fillColor: cloudColor(c), fillOpacity: 0.42, interactive: false,
+    }).addTo(layers.clouds);
+  }
+  layers.clouds.addTo(map);
+  if (posMarker) posMarker.bringToFront();
+  const here = g.grid.reduce((a, b) => (b.d < a.d ? b : a));
+  const cand = g.grid.filter((q) => q.land && q.d > 3);
+  cand.sort((a, b) => (b.score[h] - b.d * 0.0015) - (a.score[h] - a.d * 0.0015));
+  const top = [];
+  for (const q of cand) { if (top.every((x) => distKm(x.lat, x.lon, q.lat, q.lon) > g.R / 3)) top.push(q); if (top.length === 3) break; }
+  top.forEach((q, i) => {
+    L.marker([q.lat, q.lon], { icon: L.divIcon({ className: "gapicon", html: `<span>${i + 1}</span>`, iconSize: [28, 28] }) })
+      .bindPopup(`<b>Ort ${i + 1}</b><br>${fmt(q.cc[h])} % Wolken · ${fmt(q.d)} km ${compass(q.b)}<br>${navLinks(q.lat, q.lon)}`)
+      .addTo(layers.gaps);
+  });
+  const best = g.best;
+  if (best) {
+    L.marker([best.g.lat, best.g.lon], { icon: L.divIcon({ className: "gapicon best", html: `<span>★</span>`, iconSize: [30, 30] }) })
+      .bindPopup(`<b>Beste Chance</b><br>${dateTimeDE(g.times[best.h])} Uhr<br>${fmt(best.g.cc[best.h])} % Wolken · ${fmt(best.g.d)} km ${compass(best.g.b)}<br>${navLinks(best.g.lat, best.g.lon)}`)
+      .addTo(layers.gaps);
+  }
+  // Verlauf: beste Bewertung je Stunde im Umkreis und am Standort
+  const bestPerHour = g.times.map((_, k) => Math.max(...g.grid.filter((q) => q.land).map((q) => q.score[k])));
+  const hereScore = here.score;
+  const bars = g.times.map((tt, k) => `
+    <button class="pbar${k === h ? " sel" : ""}${best && k === best.h ? " best" : ""}" data-h="${k}" title="${timeDE(tt)}">
+      <span class="pfill" style="height:${Math.round(bestPerHour[k] * 100)}%"></span>
+      <span class="phere" style="height:${Math.round(hereScore[k] * 100)}%"></span>
+      <i>${tt.toLocaleTimeString("de-DE", { hour: "2-digit" })}</i></button>`).join("");
+  el.innerHTML = `
+    ${best ? `<div class="bestbox"><b>★ Beste Chance in den nächsten ${g.times.length} h:</b> ${dateTimeDE(g.times[best.h])} Uhr, ${fmt(best.g.d)} km ${compass(best.g.b)} von hier, ${fmt(best.g.cc[best.h])} % Wolken${kpAt(g.times[best.h]) != null ? `, Kp ${fmt(kpAt(g.times[best.h]), 1)}` : ""}.
+      <div class="row">${navLinks(best.g.lat, best.g.lon)}<button class="btn small ghost" onclick="setHour(${best.h})">Zeit zeigen</button></div></div>` : `<p class="muted small">In den nächsten Stunden gibt es im Umkreis kein dunkles, klares Fenster.</p>`}
+    <div class="pbars">${bars}</div>
+    <p class="muted small">Grün = beste Bewertung im Umkreis, blau = an deinem Standort. Tippe auf eine Stunde oder nutze den Schieber.</p>
+    <p class="small">Um ${h === 0 ? "jetzt" : timeDE(t) + " Uhr"} hier: <b>${fmt(here.cc[h])} %</b> Wolken.</p>
+    ${top.map((q, i) => `
+      <div class="gap">
+        <div class="gaphead"><span class="gapnum">${i + 1}</span>
+          <div><b>${fmt(q.cc[h])} % Wolken</b> · ${fmt(q.d)} km Luftlinie Richtung ${compass(q.b)}
+          <div class="muted small">tief ${fmt(q.low[h])} % · mittel ${fmt(q.mid[h])} % · Bewertung ${fmt(q.score[h] * 100)} von 100</div></div>
+        </div>
+        <div class="row">${navLinks(q.lat, q.lon)}</div>
+      </div>`).join("")}
+    <p class="muted small">Bewertung = klarer Himmel × Dunkelheit × Mondlicht × Polarlicht-Aussicht (jetzt aus OVATION, später aus der Kp-Vorhersage). Punkte über dem Meer werden ausgelassen, die Fahrstrecke kann länger als die Luftlinie sein.</p>`;
+  el.querySelectorAll(".pbar").forEach((b) => b.addEventListener("click", () => setHour(+b.dataset.h)));
+}
+function setHour(h) {
+  if (!state.gaps || state.gaps.error) return;
+  state.gaps.hour = h;
+  $("#hourSlider").value = String(h);
+  renderGaps();
+}
+
+// =====================================================================
+// Straßen Norwegen (Statens vegvesen, DATEX über WFS)
+// =====================================================================
+const SITUATION_DE = {
+  MaintenanceWorks: "Bauarbeiten", RoadOrCarriagewayOrLaneManagement: "Verkehrsregelung", Accident: "Unfall",
+  AbnormalTraffic: "Stau", WeatherRelatedRoadConditions: "Straßenverhältnisse", PoorEnvironmentConditions: "Schlechte Sicht/Wetter",
+  GeneralObstruction: "Hindernis", AnimalPresenceObstruction: "Tiere auf der Straße", VehicleObstruction: "Liegengebliebenes Fahrzeug",
+  NonWeatherRelatedRoadConditions: "Straßenzustand", RoadsideAssistance: "Pannenhilfe", Activity: "Veranstaltung",
+  ReroutingManagement: "Umleitung", SpeedManagement: "Tempolimit", WinterDrivingManagement: "Winterfahrbetrieb",
+  EquipmentOrSystemFault: "Technische Störung", InfrastructureDamageObstruction: "Straßenschaden", EnvironmentalObstruction: "Lawine/Steinschlag/Hindernis",
+};
+function vegvesenURL(type, bbox, count = 300) {
+  // bbox: [minLat, minLon, maxLat, maxLon] (EPSG:4326 in Breite/Länge-Reihenfolge)
+  const p = new URLSearchParams({ service: "WFS", version: "2.0.0", request: "GetFeature", typeNames: type, outputFormat: "application/json", count: String(count), bbox: bbox.join(",") + ",urn:ogc:def:crs:EPSG::4326" });
+  return `${URL_VEGVESEN_WFS}?${p.toString()}`;
+}
+function classifySituation(pr) {
+  const txt = ((pr.DESCRIPTION || "") + " " + (pr.SECONDARY_TYPES || "") + " " + (pr.ROAD_OR_CARRIAGEWAY_OR_LANE_MANAGEMENT_TYPE || "")).toLowerCase();
+  if (/kolonne|convoy/.test(txt)) return { key: "kolonne", label: "Kolonnenfahrt", level: "warn", order: 1 };
+  if (/roadclosed|stengt|closed/.test(txt)) return { key: "closed", label: "Gesperrt", level: "bad", order: 0 };
+  if (/glatt|is på|ice|snø|snow|slippery/.test(txt)) return { key: "winter", label: "Glätte/Schnee", level: "warn", order: 2 };
+  return { key: "info", label: SITUATION_DE[pr.SITUATION_TYPE] || "Meldung", level: pr.SEVERITY === "highest" || pr.SEVERITY === "high" ? "warn" : "ok", order: 3 };
+}
+function swapLatLon(geom) {
+  // Vegvesen liefert Koordinaten als [Breite, Länge]
+  const sw = (c) => (Array.isArray(c[0]) ? c.map(sw) : [c[1], c[0]]);
+  return { ...geom, coordinates: sw(geom.coordinates) };
+}
+function glatte(pr) {
+  const ts = pr.ROAD_SURFACE_TEMPERATURE, dp = pr.DEW_POINT_TEMPERATURE, pi = pr.PRECIPITATION_INTENSITY;
+  if (ts == null) return null;
+  if (ts <= 0 && ((pi || 0) > 0 || (dp != null && ts <= dp + 0.5) || (pr.RELATIVE_HUMIDITY || 0) > 90)) return "hoch";
+  if (ts <= 1) return "möglich";
+  return null;
+}
+async function loadRoads() {
+  const p = state.pos;
+  if (!p || state.country !== "no") { state.roads = null; renderRoads(); return; }
+  state.roads = { loading: true }; renderRoads();
+  const bbox = [p.lat - 1.0, p.lon - 2.6, p.lat + 1.0, p.lon + 2.6];
+  try {
+    const [sit, wx] = await Promise.all([getJSON(vegvesenURL("SituationSimple_v2", bbox)), getJSON(vegvesenURL("WeatherSimple_v2", bbox))]);
+    const seen = new Set(), msgs = [];
+    for (const f of sit.features || []) {
+      const pr = f.properties;
+      const key = pr.SITUATION_ID + "|" + pr.LOCATION_DESCRIPTION;
+      const cls = classifySituation(pr);
+      const lat = pr.COORDINATES_FOR_DISPLAY_LATITUDE, lon = pr.COORDINATES_FOR_DISPLAY_LONGITUDE;
+      const m = { pr, cls, lat, lon, d: lat != null ? distKm(p.lat, p.lon, lat, lon) : 999, geom: f.geometry ? swapLatLon(f.geometry) : null };
+      if (seen.has(key)) { const o = msgs.find((x) => x.key === key); if (o && cls.order < o.cls.order) { o.cls = cls; o.pr = pr; } continue; }
+      seen.add(key); m.key = key; msgs.push(m);
+    }
+    msgs.sort((a, b) => a.cls.order - b.cls.order || a.d - b.d);
+    const stations = (wx.features || []).map((f) => {
+      const pr = f.properties, c = f.geometry?.coordinates || [];
+      const lat = c[0], lon = c[1];
+      return { pr, lat, lon, d: distKm(p.lat, p.lon, lat, lon), ice: glatte(pr) };
+    }).sort((a, b) => a.d - b.d);
+    state.roads = { msgs, stations, t: Date.now() };
+    save("roads", { pos: p, msgs: msgs.map(({ geom, ...r }) => r), stations, t: Date.now() });
+  } catch (e) {
+    const c = load("roads");
+    state.roads = c && distKm(c.pos.lat, c.pos.lon, p.lat, p.lon) < 50 ? { ...c, cached: true } : { error: e.message || String(e) };
+  }
+  renderRoads();
+}
+function fmtNoTime(s) { if (!s) return ""; const d = new Date(s); return isNaN(d) ? "" : d.toLocaleString("de-DE", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); }
+function renderRoads() {
+  const el = $("#roadCard");
+  if (!el) return;
+  layers.roads?.clearLayers();
+  const r = state.roads;
+  if (state.country && state.country !== "no") {
+    const links = { se: ["Trafikverket – Trafikinfo", "https://www.trafikverket.se/trafikinformation/"], fi: ["Fintraffic – Liikennetilanne", "https://liikennetilanne.fintraffic.fi/"], de: ["Verkehrsinfo (ADAC)", "https://www.adac.de/verkehr/verkehrsinformationen/"] }[state.country];
+    el.innerHTML = `<p class="muted small">Live-Straßenmeldungen gibt es in der App nur für Norwegen.</p>${links ? `<a class="btn small ghost" href="${links[1]}">${links[0]}</a>` : ""}`;
+    return;
+  }
+  if (!r) { el.innerHTML = `<p class="muted small">Standort wird ermittelt …</p>`; return; }
+  if (r.loading) { el.innerHTML = `<p class="muted small">Straßenmeldungen werden geladen …</p>`; return; }
+  if (r.error) { el.innerHTML = `<p class="err">Straßenmeldungen nicht verfügbar (${esc(r.error)}).</p><a class="btn small ghost" href="https://www.vegvesen.no/trafikk/">vegvesen.no/trafikk</a>`; return; }
+  // Karte
+  for (const m of r.msgs) {
+    const color = m.cls.level === "bad" ? "#e2554d" : m.cls.key === "kolonne" ? "#f0a03a" : m.cls.key === "winter" ? "#7fb2ff" : "#c9d23a";
+    const popup = `<b>${esc(m.cls.label)}</b> · ${esc(m.pr.ROAD_NUMBER || "")}<br>${esc(m.pr.LOCATION_DESCRIPTION || "")}<br><span class="muted">${esc(m.pr.DESCRIPTION || "")}</span>`;
+    if (m.geom && /Line/.test(m.geom.type)) L.geoJSON(m.geom, { style: { color, weight: 6, opacity: 0.85 } }).bindPopup(popup).addTo(layers.roads);
+    else if (m.lat != null) L.circleMarker([m.lat, m.lon], { radius: 7, color: "#fff", weight: 1, fillColor: color, fillOpacity: 1 }).bindPopup(popup).addTo(layers.roads);
+  }
+  for (const s of r.stations) {
+    if (s.lat == null) continue;
+    const pr = s.pr;
+    L.circleMarker([s.lat, s.lon], { radius: 6, color: "#fff", weight: 1, fillColor: s.ice === "hoch" ? "#e2554d" : s.ice ? "#f0a03a" : "#2f8cff", fillOpacity: 1 })
+      .bindPopup(`<b>${esc(pr.LOCATION_DESCRIPTION)}</b><br>Fahrbahn ${fmt(pr.ROAD_SURFACE_TEMPERATURE, 1)} °C · Luft ${fmt(pr.AIR_TEMPERATURE, 1)} °C<br>Wind ${fmt(pr.WIND_SPEED, 1)} m/s${pr.MAXIMUM_WIND_SPEED != null ? `, Böen ${fmt(pr.MAXIMUM_WIND_SPEED, 1)} m/s` : ""}${s.ice ? `<br><b>Glätte ${s.ice}</b>` : ""}`)
+      .addTo(layers.roads);
+  }
+  const near = r.msgs.filter((m) => m.d <= 150);
+  const important = near.filter((m) => m.cls.order <= 2);
+  const rest = near.filter((m) => m.cls.order > 2);
+  const item = (m) => `<li class="${m.cls.level}"><b>${esc(m.cls.label)}</b> · ${esc(m.pr.ROAD_NUMBER || "")} ${esc(m.pr.LOCATION_DESCRIPTION || "")} <span class="muted">(${fmt(m.d)} km)</span>
+      <div class="muted small">${esc(m.pr.DESCRIPTION || "").replace(/\|/g, " ")}${m.pr.END_TIME ? ` · bis ${fmtNoTime(m.pr.END_TIME)}` : ""}${m.pr.ACTIVE === 0 ? " · gerade nicht aktiv" : ""}</div></li>`;
+  const st = r.stations.slice(0, 4);
+  el.innerHTML = `
+    ${important.length ? `<ul class="checks">${important.slice(0, 8).map(item).join("")}</ul>` : `<p class="small">Keine Sperrungen, Kolonnen oder Glätte-Meldungen im Umkreis von 150 km.</p>`}
+    ${rest.length ? `<details class="small"><summary>${rest.length} weitere Meldungen (Bauarbeiten u. a.)</summary><ul class="checks">${rest.slice(0, 25).map(item).join("")}</ul></details>` : ""}
+    ${st.length ? `<h3 class="sub3">Straßenwetter in der Nähe</h3><div class="stations">${st.map((s) => `
+      <div class="station ${s.ice === "hoch" ? "bad" : s.ice ? "warn" : ""}"><b>${esc(s.pr.LOCATION_DESCRIPTION)}</b> <span class="muted">${fmt(s.d)} km</span>
+        <div>Fahrbahn <b>${fmt(s.pr.ROAD_SURFACE_TEMPERATURE, 1)} °C</b> · Luft ${fmt(s.pr.AIR_TEMPERATURE, 1)} °C${s.pr.DEPTH_OF_SNOW ? ` · Schnee ${fmt(s.pr.DEPTH_OF_SNOW * 100)} cm` : ""}${s.ice ? ` · <b>Glätte ${s.ice}</b>` : ""}</div></div>`).join("")}</div>` : ""}
+    <p class="muted small">Quelle: Statens vegvesen${r.cached ? " (gespeichert)" : ""}. Die Meldungen sind auf Norwegisch. Auf der Karte: rot gesperrt, orange Kolonne, blau Glätte, gelb sonstiges, Punkte = Messstationen. Telefon Verkehrszentrale: 175, aus dem Ausland +47 815 48 991.</p>
+    <a class="btn small ghost" href="https://www.vegvesen.no/trafikk/">vegvesen.no/trafikk</a>`;
+}
+
+// =====================================================================
+// Drohnen-Planer: Höhenwind, Flugzeit bei Kälte, Tageslicht
+// =====================================================================
+function droneSettings() {
+  return { minutes: 34, vmax: 10.7, ...(load("drone") || {}) };
+}
+function tempFactor(T) {
+  // Kapazität eines vorgewärmten Akkus, grob linear zwischen Stützpunkten
+  const pts = [[-20, 0.6], [-10, 0.75], [0, 0.85], [15, 1]];
+  if (T <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) if (T <= pts[i][0]) { const [t0, f0] = pts[i - 1], [t1, f1] = pts[i]; return f0 + ((T - t0) / (t1 - t0)) * (f1 - f0); }
+  return 1;
+}
+function windFactor(v, vmax) { return clamp(1 - 0.35 * (v / vmax) ** 2, 0.5, 1); }
+function flightTime(minutes, T, v, vmax) { return minutes * tempFactor(T) * windFactor(v, vmax); }
+// Sonnenzeiten eines Tages (Abtastung alle 2 min)
+function dayLight(date, lat, lon) {
+  const d0 = new Date(date); d0.setHours(0, 0, 0, 0);
+  let maxEl = -90, maxT = null, sunUp = null, sunDown = null, civUp = null, civDown = null;
+  let prev = sunElevation(d0, lat, lon);
+  for (let m = 2; m <= 1440; m += 2) {
+    const t = new Date(d0.getTime() + m * 60000), e = sunElevation(t, lat, lon);
+    if (e > maxEl) { maxEl = e; maxT = t; }
+    if (prev < -0.833 && e >= -0.833 && !sunUp) sunUp = t;
+    if (prev >= -0.833 && e < -0.833) sunDown = t;
+    if (prev < -6 && e >= -6 && !civUp) civUp = t;
+    if (prev >= -6 && e < -6) civDown = t;
+    prev = e;
+  }
+  return { d0, maxEl, maxT, sunUp, sunDown, civUp, civDown };
+}
+function renderDronePlanner() {
+  const el = $("#dronePlan");
+  if (!el) return;
+  const p = state.pos, w = state.weather;
+  if (!p) { el.innerHTML = ""; return; }
+  const s = droneSettings();
+  const h = w?.hourly;
+  let rows = "";
+  if (h?.wind_speed_120m) {
+    const off = (w.utc_offset_seconds || 0) * 1000;
+    const now = Date.now();
+    const list = h.time.map((t, i) => ({ d: new Date(Date.parse(t + "Z") - off), i })).filter((x) => x.d.getTime() > now - 3600e3).slice(0, 12);
+    rows = list.map(({ d, i }) => {
+      const v120 = h.wind_speed_120m[i], v80 = h.wind_speed_80m?.[i], g10 = h.wind_gusts_10m?.[i], T = h.temperature_2m?.[i], pr = h.precipitation?.[i] || 0;
+      const worst = Math.max(v120 || 0, g10 || 0);
+      const lvl = pr > 0.1 ? "bad" : worst <= 0.5 * s.vmax ? "ok" : worst <= 0.8 * s.vmax ? "warn" : "bad";
+      const ft = flightTime(s.minutes, T ?? 0, v120 ?? 0, s.vmax);
+      return `<tr class="${lvl}"><td>${timeDE(d)}</td><td>${fmt(v80, 1)}</td><td>${fmt(v120, 1)}</td><td>${fmt(g10, 1)}</td><td>${fmt(T, 0)}°</td><td>${pr > 0.1 ? "❄︎/☂︎" : "–"}</td><td>${fmt(ft * 0.7, 0)} min</td></tr>`;
+    }).join("");
+  }
+  const days = [];
+  for (let k = 0; k < 5; k++) { const d = new Date(); d.setDate(d.getDate() + k); days.push(dayLight(d, p.lat, p.lon)); }
+  const dayRow = (x) => {
+    const name = x.d0.toLocaleDateString("de-DE", { weekday: "short", day: "2-digit", month: "2-digit" });
+    const sun = x.sunUp && x.sunDown ? `${timeDE(x.sunUp)}–${timeDE(x.sunDown)}` : x.maxEl < -0.833 ? "Polarnacht" : "Mitternachtssonne";
+    const civ = x.civUp && x.civDown ? `${timeDE(x.civUp)}–${timeDE(x.civDown)}` : x.maxEl < -6 ? "keine" : "ganztägig";
+    return `<tr><td>${name}</td><td>${sun}</td><td>${civ}</td><td>${fmt(x.maxEl, 1)}° um ${timeDE(x.maxT)}</td></tr>`;
+  };
+  el.innerHTML = `
+    <div class="dset">
+      <label>Flugzeit laut Hersteller <input id="dMin" type="number" inputmode="numeric" min="5" max="90" value="${s.minutes}"> min</label>
+      <label>Max. Windstärke <input id="dVmax" type="number" inputmode="decimal" step="0.1" min="3" max="20" value="${s.vmax}"> m/s</label>
+    </div>
+    ${rows ? `<div class="tblwrap"><table class="tbl"><thead><tr><th>Zeit</th><th>Wind 80 m</th><th>Wind 120 m</th><th>Böen 10 m</th><th>Temp.</th><th>Niederschl.</th><th>Flugzeit*</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="muted small">Wind in m/s. Grün: Wind und Böen bis 50 % deiner Grenze, gelb bis 80 %, rot darüber oder bei Niederschlag. *Flugzeit bis zur Landung mit 30 % Restakku, Akku vorgewärmt: Herstellerangabe × Kältefaktor × Windfaktor × 0,7. Der Kältefaktor sinkt von 1 bei 15 °C auf etwa 0,75 bei −10 °C, nicht vorgewärmte Akkus verlieren noch deutlich mehr.</p>` : `<p class="muted small">Höhenwind wird geladen …</p>`}
+    <h3 class="sub3">Tageslicht${days[0].maxEl < -0.833 ? " – hier herrscht Polarnacht" : ""}</h3>
+    <div class="tblwrap"><table class="tbl"><thead><tr><th>Tag</th><th>Sonne</th><th>Dämmerung (hell genug)</th><th>Höchster Sonnenstand</th></tr></thead><tbody>${days.map(dayRow).join("")}</tbody></table></div>
+    <p class="muted small">„Dämmerung“ = bürgerliche Dämmerung (Sonne höchstens 6° unter dem Horizont), dann ist es ohne Licht noch hell genug für Fotos und Drohnenflüge.</p>`;
+  const saveS = () => {
+    const m = parseFloat($("#dMin").value), v = parseFloat($("#dVmax").value);
+    if (m > 0 && v > 0) { save("drone", { minutes: m, vmax: v }); renderDronePlanner(); }
+  };
+  $("#dMin").addEventListener("change", saveS);
+  $("#dVmax").addEventListener("change", saveS);
+}
+
+// =====================================================================
+// Lieblingsorte (nur auf diesem Gerät gespeichert)
+// =====================================================================
+function getSpots() { return load("spots") || []; }
+function setSpots(s) { save("spots", s); }
+function addSpot(lat, lon, name) {
+  const s = getSpots();
+  s.push({ id: Date.now().toString(36), name: (name || "Ort").slice(0, 40), lat, lon });
+  setSpots(s);
+  loadSpots();
+}
+function removeSpot(id) {
+  const btn = document.querySelector(`[data-del="${id}"]`);
+  if (btn && !btn.classList.contains("confirm")) { btn.classList.add("confirm"); btn.textContent = "Löschen?"; setTimeout(() => { if (btn.isConnected) { btn.classList.remove("confirm"); btn.textContent = "×"; } }, 3000); return; }
+  setSpots(getSpots().filter((x) => x.id !== id));
+  loadSpots();
+}
+function saveSpotFromPopup(lat, lon) {
+  const inp = document.getElementById("spotName");
+  addSpot(lat, lon, inp?.value?.trim() || "Ort");
+  const box = document.getElementById("spotSave");
+  if (box) box.innerHTML = `<span class="okmsg">Gespeichert unter „Meine Orte“.</span>`;
+}
+function showSpotForm(lat, lon, name) {
+  const box = document.getElementById("spotSave");
+  if (!box) return;
+  box.innerHTML = `<input id="spotName" value="${esc(name || "")}" placeholder="Name" maxlength="40"><button class="btn small" onclick="saveSpotFromPopup(${lat},${lon})">Speichern</button>`;
+  document.getElementById("spotName").focus();
+}
+async function loadSpots() {
+  const spots = getSpots();
+  state.spots = { list: spots, w: null };
+  renderSpots();
+  if (!spots.length) return;
+  try {
+    const q = new URLSearchParams({ latitude: spots.map((s) => s.lat.toFixed(4)).join(","), longitude: spots.map((s) => s.lon.toFixed(4)).join(","), current: "cloud_cover", timezone: "auto" });
+    const res = await getJSON(`${URL_METEO}?${q.toString()}`);
+    state.spots.w = Array.isArray(res) ? res : [res];
+  } catch (e) { state.spots.err = e.message || String(e); }
+  renderSpots();
+}
+function renderSpots() {
+  const el = $("#spotsCard");
+  if (!el) return;
+  layers.spots?.clearLayers();
+  const S = state.spots || { list: getSpots() };
+  const p = state.pos, now = new Date();
+  for (const s of S.list) {
+    L.marker([s.lat, s.lon], { icon: L.divIcon({ className: "spoticon", html: "<span>♥</span>", iconSize: [24, 24] }) })
+      .on("click", () => showPlaceInfo(s.lat, s.lon)).addTo(layers.spots);
+  }
+  if (!S.list.length) {
+    el.innerHTML = `<p class="muted small">Noch keine Orte gespeichert. Tippe auf die Karte und dann im Fenster auf „Ort speichern“, oder speichere deinen aktuellen Standort.</p>
+      <button class="btn small ghost" onclick="state.pos && addSpot(state.pos.lat, state.pos.lon, state.pos.label)">Aktuellen Standort speichern</button>`;
+    return;
+  }
+  el.innerHTML = S.list.map((s, i) => {
+    const cc = S.w?.[i]?.current?.cloud_cover;
+    const elev = sunElevation(now, s.lat, s.lon);
+    const aur = state.ovation ? auroraFor(state.ovation, s.lat, s.lon).eff : null;
+    const pv = aur != null && cc != null ? visibility(aur, cc, elev, moonFactor(now, s.lat, s.lon)) : null;
+    return `<div class="spot">
+      <div class="spotmain" onclick="map.setView([${s.lat},${s.lon}], 11); showPlaceInfo(${s.lat},${s.lon}); document.getElementById('map').scrollIntoView({behavior:'smooth'})">
+        <b>${esc(s.name)}</b><div class="muted small">${p ? fmt(distKm(p.lat, p.lon, s.lat, s.lon)) + " km " + compass(bearingDeg(p.lat, p.lon, s.lat, s.lon)) : ""}</div></div>
+      <div class="spotval"><span style="color:${cc != null ? cloudColor(cc) : "inherit"}">${cc != null ? fmt(cc) + " %" : S.err ? "–" : "…"}</span><i>Wolken</i></div>
+      <div class="spotval"><span>${pv != null ? fmt(pv, pv < 10 ? 1 : 0) + " %" : "–"}</span><i>Polarlicht</i></div>
+      <a class="btn small" href="https://maps.apple.com/?daddr=${s.lat.toFixed(5)},${s.lon.toFixed(5)}&dirflg=d">Route</a>
+      <button class="btn small ghost del" data-del="${s.id}" onclick="removeSpot('${s.id}')">×</button>
+    </div>`;
+  }).join("") + `<p class="muted small">Die Orte sind nur auf diesem Gerät gespeichert. Die App auf dem Home-Bildschirm hat dabei einen eigenen Speicher, getrennt von Safari.</p>
+    <button class="btn small ghost" onclick="state.pos && addSpot(state.pos.lat, state.pos.lon, state.pos.label)">Aktuellen Standort speichern</button>`;
+}
+
+// =====================================================================
+// Kamera-Hilfe: Nikon Z6III + Viltrox AF 16 mm f/1,8 und iPhone 17 Pro Max
+// =====================================================================
+const CAM = { name: "Nikon Z6III", pitchUm: 35.9 / 6048 * 1000, lens: "Viltrox AF 16 mm f/1,8", f: 16, N: 1.8 };
+function npf(f, N, pitch) { return (35 * N + 30 * pitch) / f; }
+function activityAuto() {
+  const p = state.pos;
+  const aur = p && state.ovation ? auroraFor(state.ovation, p.lat, p.lon).eff : 0;
+  const sw = swSummary();
+  if (aur >= 40 || sw?.level >= 3) return "strong";
+  if (aur >= 15 || sw?.level >= 2) return "medium";
+  return "weak";
+}
+function renderCamera() {
+  const el = $("#camCard");
+  if (!el) return;
+  const p = state.pos, now = new Date();
+  const mode = state.camMode || "auto";
+  const act = mode === "auto" ? activityAuto() : mode;
+  const mi = p ? moonInfo(now, p.lat, p.lon) : null;
+  const brightMoon = mi && mi.alt > 5 && mi.fraction > 0.5;
+  const tMax = npf(CAM.f, CAM.N, CAM.pitchUm);
+  const nik = {
+    weak: { iso: brightMoon ? "1600" : "3200", t: `${fmt(Math.min(12, tMax))}–${fmt(tMax)} s`, note: "Schwaches, ruhiges Polarlicht: lange belichten, damit es Farbe bekommt." },
+    medium: { iso: brightMoon ? "1600" : "1600–3200", t: "4–8 s", note: "Deutliche Bänder: kürzer belichten, sonst verschwimmen die Strukturen." },
+    strong: { iso: brightMoon ? "3200" : "3200–6400", t: "1–3 s", note: "Schnell tanzendes Polarlicht: sehr kurz belichten und dafür die ISO hochziehen, so bleiben die Vorhänge scharf." },
+  }[act];
+  const iph = {
+    weak: "Nachtmodus auf dem Stativ bis 10–30 s ziehen",
+    medium: "Nachtmodus auf dem Stativ etwa 5–10 s",
+    strong: "Nachtmodus kurz halten, etwa 3 s, oder ein Video im Nachtmodus",
+  }[act];
+  const actName = { weak: "schwach / ruhig", medium: "mittel", strong: "stark / schnell" }[act];
+  el.innerHTML = `
+    <div class="seg">${["auto", "weak", "medium", "strong"].map((m) => `<button class="${m === mode ? "on" : ""}" onclick="state.camMode='${m}'; renderCamera()">${{ auto: "Automatisch", weak: "Schwach", medium: "Mittel", strong: "Stark" }[m]}</button>`).join("")}</div>
+    <p class="small">Empfehlung für <b>${actName}</b>${mode === "auto" ? " (aus OVATION und Sonnenwind)" : ""}${brightMoon ? `, mit hellem Mond (${fmt(mi.fraction * 100)} % beleuchtet, ${fmt(mi.alt)}° hoch)` : ""}:</p>
+    <div class="camgrid">
+      <div class="cam"><h3>📷 ${CAM.name} + ${CAM.lens}</h3>
+        <div class="camvals"><div><span>Blende</span><b>f/1,8</b></div><div><span>ISO</span><b>${nik.iso}</b></div><div><span>Belichtung</span><b>${nik.t}</b></div><div><span>Weißabgleich</span><b>3500–4000 K</b></div></div>
+        <p class="small">${nik.note}</p>
+        <ul class="small tips">
+          <li>Längste Belichtung für punktförmige Sterne mit 16 mm: <b>≈ ${fmt(tMax)} s</b> (NPF-Regel). Die alte 500er-Regel ergäbe 31 s und ist für 24 MP zu lang.</li>
+          <li>RAW, Fokus manuell auf unendlich: <b>Starlight View</b> einschalten, einen hellen Stern in der Lupe scharf stellen, dann Fokus nicht mehr berühren.</li>
+          <li><b>Warme Displayfarben</b> (Individualfunktion d12) schonen deine Nachtsicht.</li>
+          <li>Auf dem Stativ: Bildstabilisator aus, 2-s-Selbstauslöser, Langzeit-Rauschreduzierung aus (sie verdoppelt die Wartezeit).</li>
+          <li>Kälte: Akkus (EN-EL15c) in der Innentasche warm halten und Ersatz mitnehmen. Kamera nach dem Rückweg in der Tasche langsam aufwärmen lassen, damit sie nicht beschlägt.</li>
+          ${brightMoon ? "<li>Der Mond hellt Landschaft und Himmel auf: eine Stufe weniger ISO, dafür schöne Vordergründe ohne Zusatzlicht.</li>" : ""}
+        </ul>
+      </div>
+      <div class="cam"><h3>📱 iPhone 17 Pro Max</h3>
+        <div class="camvals"><div><span>Kamera</span><b>1× (24 mm)</b></div><div><span>Modus</span><b>Nachtmodus</b></div><div><span>Dauer</span><b>${act === "strong" ? "≈ 3 s" : act === "medium" ? "5–10 s" : "10–30 s"}</b></div></div>
+        <ul class="small tips">
+          <li>${iph}. Die längsten Zeiten bietet der Nachtmodus nur, wenn das iPhone ruhig auf einem Stativ steht.</li>
+          <li>Die 1×-Hauptkamera (f/1,78) sammelt mehr Licht als die 0,5×-Ultraweitwinkel (f/2,2). Ultraweit nur, wenn das Polarlicht den ganzen Himmel füllt.</li>
+          <li>ProRAW einschalten, wenn du die Bilder nachbearbeiten willst. Blitz aus.</li>
+          <li>Belichtung leicht verringern (etwa −0,7), damit der Himmel dunkel bleibt.</li>
+          <li>Nachtmodus-Zeitraffer eignet sich gut für bewegte Polarlichter.</li>
+        </ul>
+      </div>
+    </div>`;
+}
 </script>
 </body>
 </html>
