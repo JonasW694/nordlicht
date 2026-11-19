@@ -854,6 +854,9 @@ const URL_EEA_N2K = "https://bio.discomap.eea.europa.eu/arcgis/rest/services/Pro
 const URL_EEA_CDDA = "https://bio.discomap.eea.europa.eu/arcgis/rest/services/ProtectedSites/CDDA_Dyna_WM/MapServer";  // Europa: national ausgewiesene Schutzgebiete
 const URL_DIPUL = "https://uas-betrieb.de/geoservices/dipul/wms";                               // Deutschland: amtliche geografische UAS-Gebiete
 const URL_NOMINATIM = "https://nominatim.openstreetmap.org";
+// dipul-Ebenen (Namen aus GetCapabilities geprüft)
+const DIPUL_SHOW = ["flughaefen", "flugplaetze", "kontrollzonen", "flugbeschraenkungsgebiete", "temporaere_betriebseinschraenkungen", "naturschutzgebiete", "nationalparks", "vogelschutzgebiete", "ffh-gebiete", "militaerische_anlagen", "justizvollzugsanstalten", "kraftwerke", "industrieanlagen", "labore"];
+const DIPUL_QUERY = [...DIPUL_SHOW, "wohngrundstuecke", "krankenhaeuser", "bundesautobahnen", "bundesstrassen", "bahnanlagen", "binnenwasserstrassen", "seewasserstrassen", "schifffahrtsanlagen", "umspannwerke", "stromleitungen", "windkraftanlagen", "behoerden", "polizei", "sicherheitsbehoerden", "diplomatische_vertretungen", "internationale_organisationen", "freibaeder", "modellflugplaetze"];
 const EARTH_R_KM = 6371;
 const HORIZON_KM = 600;      // bis zu dieser Entfernung kann Polarlicht am Nordhorizont sichtbar sein (vereinfachtes Modell)
 const REFRESH_MS = 5 * 60 * 1000;
@@ -1111,17 +1114,64 @@ async function arcIdentify(base, lat, lon, source) {
     if (/grense|punkt|point/i.test(r.layerName || "")) continue;
     const a = r.attributes || {};
     const pick = (...keys) => { for (const k of keys) if (a[k] && String(a[k]).trim() && String(a[k]) !== "Null") return String(a[k]); return ""; };
-    const name = pick("navn", "Navn", "offisieltNavn", "SITENAME", "siteName", "SITE_NAME", "site_name", "NAME", "Name") || r.value || "Schutzgebiet";
+    if (!a.navn && !a.siteName && !a.SITENAME && !r.value) continue;
+    let name = (pick("offisieltNavn", "navn", "Navn", "SITENAME", "siteName", "SITE_NAME", "site_name", "NAME", "Name") || r.value || "Schutzgebiet").replace(/^\d+\s+/, "");
+    if (/^(strictly protected|protected|nodata|null)$/i.test(name)) continue;
     const form = pick("verneform", "Verneform", "designationType", "DESIGNATION", "designation", "DESIG", "DESIG_ENG", "desigAbbr", "DESIG_ABBR") || r.layerName || "";
-    let link = null;
-    for (const v of Object.values(a)) if (typeof v === "string" && /^https?:\/\//.test(v)) { link = v; break; }
+    let link = a.verneforskrift && /^https?:/.test(a.verneforskrift) ? a.verneforskrift : null;
+    if (!link) for (const v of Object.values(a)) if (typeof v === "string" && /^https?:\/\//.test(v)) { link = v; break; }
     out.push({ name, form, link, source, layer: r.layerName || "", raw: JSON.stringify(a).toLowerCase() });
   }
   return out;
 }
 
+// Deutschland: amtliche geografische UAS-Gebiete am Punkt (dipul, GetFeatureInfo als Text)
+async function queryDipul(lat, lon) {
+  const d = 0.0005, L = DIPUL_QUERY.map((n) => "dipul:" + n).join(",");
+  const u = `${URL_DIPUL}?service=WMS&version=1.3.0&request=GetFeatureInfo&layers=${L}&query_layers=${L}&styles=&crs=EPSG:4326&bbox=${lat - d},${lon - d},${lat + d},${lon + d}&width=101&height=101&i=50&j=50&info_format=text/plain&feature_count=50`;
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 15000);
+  try {
+    const r = await fetch(u, { signal: ctl.signal });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const txt = await r.text();
+    if (/ServiceException/.test(txt)) throw new Error("dipul-Dienstfehler");
+    if (!/Results for FeatureType/.test(txt) && !(txt.trim() === "" || /no features/i.test(txt))) throw new Error("unerwartete dipul-Antwort");
+    const zones = [];
+    for (const block of txt.split(/Results for FeatureType/).slice(1)) {
+      const z = {};
+      for (const line of block.split("\n")) { const m = line.match(/^\s*([\w-]+)\s*=\s*(.*)$/); if (m) z[m[1]] = m[2].trim(); }
+      if (!z.type_code) continue;
+      z.name = z.name || z.generated_name_DE || "";
+      if (!zones.some((y) => y.type_code === z.type_code && y.name === z.name)) zones.push(z);
+    }
+    return zones;
+  } finally { clearTimeout(t); }
+}
+const DIPUL_TEXT = {
+  FLUGHAFEN: ["bad", "Flughafen-Bereich: nur mit Zustimmung der Flugsicherung bzw. des Flughafens"],
+  FLUGPLATZ: ["bad", "Flugplatz-Bereich (1,5 km): nur mit Zustimmung von Flugplatzbetreiber oder Luftaufsicht"],
+  KONTROLLZONE: ["warn", "Kontrollzone: nur mit Freigabe der Flugsicherung bzw. bis zur dort erlaubten Höhe"],
+  FLUGBESCHRAENKUNGSGEBIET: ["bad", "Flugbeschränkungsgebiet: Einflug nur mit Genehmigung"],
+  NATURSCHUTZGEBIET: ["bad", "Naturschutzgebiet: nur mit Zustimmung der Naturschutzbehörde"],
+  NATIONALPARK: ["bad", "Nationalpark: nur mit Zustimmung der Naturschutzbehörde"],
+  VOGELSCHUTZGEBIET: ["bad", "Vogelschutzgebiet (Natura 2000): nur mit Zustimmung der Naturschutzbehörde"],
+  "FFH-GEBIET": ["bad", "FFH-Gebiet (Natura 2000): nur mit Zustimmung der Naturschutzbehörde"],
+  WOHNGRUNDSTUECK: ["warn", "Wohngrundstück: mit Kameradrohne nur mit Zustimmung des Eigentümers oder über 100 m"],
+};
+function dipulText(z) {
+  const t = DIPUL_TEXT[z.type_code];
+  const lvl = t ? t[0] : "warn";
+  const txt = t ? t[1] : "Einschränkung nach § 21h LuftVO (meist 100 m Abstand), Details in der dipul-Karte";
+  const label = z.type_code.charAt(0) + z.type_code.slice(1).toLowerCase().replace(/ue/g, "ü").replace(/ae/g, "ä").replace(/oe/g, "ö");
+  return { level: lvl, text: `<b>${esc(label)}${z.name ? " „" + esc(z.name) + "“" : ""}</b>: ${txt}` };
+}
+
 // Alle Schutzgebiete am Punkt: Naturbase (NO) + EEA Natura 2000 (EU) + EEA nationale Schutzgebiete (CDDA)
 async function queryProtected(lat, lon, country) {
+  if (country === "de") {
+    try { const zones = await queryDipul(lat, lon); return { list: [], dipul: zones, partial: false }; }
+    catch (e) { /* Rückfall auf EEA */ }
+  }
   const jobs = [arcIdentify(URL_EEA_CDDA, lat, lon, "cdda")];
   if (country === "no") jobs.push(arcIdentify(URL_VERN, lat, lon, "naturbase"));
   else jobs.push(arcIdentify(URL_EEA_N2K, lat, lon, "natura2000"));
@@ -1204,10 +1254,7 @@ function initMap() {
   ]);
   // Deutschland: amtliche UAS-Gebiete der DFS (dipul), je Ebene einzeln, damit eine fehlende Ebene die anderen nicht stört
   const deBounds = L.latLngBounds([47.2, 5.8], [55.1, 15.1]);
-  layers.dipul = L.layerGroup(
-    ["flughaefen", "flugplaetze", "kontrollzonen", "flugbeschraenkungsgebiete", "naturschutzgebiete", "nationalparks", "vogelschutzgebiete", "fauna_flora_habitate"]
-      .map((n) => L.tileLayer.wms(URL_DIPUL, { layers: "dipul:" + n, format: "image/png", transparent: true, opacity: 0.6, minZoom: 8, bounds: deBounds, attribution: "UAS-Gebiete © DFS dipul" }))
-  );
+  layers.dipul = L.tileLayer.wms(URL_DIPUL, { layers: DIPUL_SHOW.map((n) => "dipul:" + n).join(","), format: "image/png", transparent: true, opacity: 0.6, minZoom: 8, bounds: deBounds, attribution: "UAS-Gebiete © DFS dipul" });
   layers.airports = L.layerGroup();
   for (const r of AIRFIELDS) {
     const [icao, name, lat, lon, cc, kind] = r;
@@ -1556,44 +1603,54 @@ function renderGaps() {
     <p class="muted small">Punkte über dem Meer werden ausgelassen. Die Navigation führt zur nächsten Straße, die Fahrstrecke kann deutlich länger als die Luftlinie sein. Wolkenmodell mit einigen km Auflösung, kleine Lücken erkennt es nicht.</p>`;
 }
 
+// Gesamtbewertung Drohne für einen Punkt (für Karte unten und Infofenster)
+function assessDrone(country, lat, lon, v) {
+  const items = [];
+  const loading = !v || v.loading;
+  if (country === "de" && v?.dipul) {
+    if (!v.dipul.length) items.push({ level: "ok", html: "Keine amtliche UAS-Zone der DFS (dipul) an diesem Punkt", short: "keine dipul-Zone" });
+    for (const z of v.dipul) { const t = dipulText(z); items.push({ level: t.level, html: t.text, short: t.text }); }
+  } else {
+    const af = airfieldCheck(country, lat, lon);
+    items.push({ level: af.level, html: af.text, short: af.text, airfield: true });
+    if (loading) items.push({ level: "warn", html: "Schutzgebiete werden abgefragt …", short: "Schutzgebiete werden abgefragt …" });
+    else if (v.error) items.push({ level: "warn", html: "Schutzgebiete konnten nicht abgefragt werden (kein Netz oder Dienst gestört). Offizielle Karte prüfen.", short: "Schutzgebiete nicht abfragbar" });
+    else if (v.list.length) {
+      const prot = v.list.map((x) => ({ ...x, rule: protectedRule(country, x) }));
+      const main = prot.find((x) => x.rule.level === "bad") || prot[0];
+      const names = prot.map((x) => `<b>${esc(x.name)}</b>${x.form && !/^\d+$/.test(x.form) && !/designated|natda/i.test(x.form) ? ` (${esc(x.form)})` : ""}${x.link ? ` <a href="${esc(x.link)}">${/lovdata/.test(x.link) ? "Verordnung" : "Infos"}</a>` : ""}`).join(", ");
+      items.push({ level: main.rule.level, html: names + ". " + esc(main.rule.text) + ".", short: names + ": " + esc(main.rule.short) });
+    } else items.push({ level: "ok", html: "Kein Schutzgebiet an diesem Punkt gefunden" + (v.partial ? " (eine Datenquelle hat nicht geantwortet)" : "") + ".", short: "kein Schutzgebiet gefunden" });
+  }
+  const bad = items.find((x) => x.level === "bad"), warn = items.find((x) => x.level === "warn");
+  let level, title;
+  if (bad) { level = "red"; title = bad.airfield || /Flughafen|Flugplatz|Flugbeschränkung/.test(bad.html) ? "Genehmigung nötig" : "Fliegen ohne Erlaubnis verboten"; }
+  else if (loading) { level = "orange"; title = "wird geprüft …"; }
+  else if (warn) { level = "orange"; title = warn.airfield ? "Flugplatz in der Nähe – Zone prüfen" : /Kontrollzone/.test(warn.html) ? "Kontrollzone – Freigabe prüfen" : /Schutzgebiet|reservat|park|Verordnung|Vorschrift|Regeln/i.test(warn.html) ? "Schutzgebiet – Regeln prüfen" : "Einschränkung – Regeln prüfen"; }
+  else if (!COUNTRIES[country]) { level = "orange"; title = "Nicht vollständig geprüft"; }
+  else { level = "green"; title = "Keine bekannte Sperrzone"; }
+  return { level, title, items };
+}
+
 function renderDrone() {
   const el = $("#droneCard");
   const p = state.pos, w = state.weather;
   if (!p) { el.innerHTML = ""; return; }
-  const cc = state.country;
-  const C = COUNTRIES[cc];
-  const af = airfieldCheck(cc, p.lat, p.lon);
-  const v = state.vern;
-  const vernUnknown = !v || v.loading || v.error;
-  const prot = (v?.list || []).map((x) => ({ ...x, rule: protectedRule(cc, x) }));
-  const protLevel = prot.some((x) => x.rule.level === "bad") ? "bad" : prot.length ? "warn" : vernUnknown ? "warn" : "ok";
+  const cc = state.country, C = COUNTRIES[cc];
+  const A = assessDrone(cc, p.lat, p.lon, state.vern);
   const elev = sunElevation(new Date(), p.lat, p.lon);
   const gust = w?.current?.wind_gusts_10m, wind = w?.current?.wind_speed_10m, temp = w?.current?.temperature_2m;
-
-  let level, title;
-  if (af.level === "bad" || protLevel === "bad") { level = "red"; title = af.level === "bad" ? "Genehmigung nötig" : "Fliegen ohne Erlaubnis verboten"; }
-  else if (prot.length) { level = "orange"; title = "Schutzgebiet – Regeln prüfen"; }
-  else if (af.level === "warn") { level = "orange"; title = "Flugplatz in der Nähe – Zone prüfen"; }
-  else if (vernUnknown || !C) { level = "orange"; title = "Nicht vollständig geprüft"; }
-  else { level = "green"; title = "Keine bekannte Sperrzone"; }
-
-  const protTxt = !v || v.loading ? "Schutzgebiete werden abgefragt …"
-    : v.error ? "Schutzgebiete konnten nicht abgefragt werden (kein Netz oder Dienst gestört). Offizielle Karte prüfen."
-    : prot.length ? prot.map((x) => `<b>${esc(x.name)}</b>${x.form && !/^\d+$/.test(x.form) ? ` (${esc(x.form)})` : ""}${x.link ? ` <a href="${esc(x.link)}">Infos</a>` : ""}`).join(", ") + ". " + esc(prot.find((x) => x.rule.level === "bad")?.rule.text || prot[0].rule.text) + "."
-    : "Kein Schutzgebiet an diesem Punkt gefunden" + (v.partial ? " (eine Datenquelle hat nicht geantwortet)" : "") + ".";
-
   const windWarn = gust != null && gust > 10.7;
   const links = C ? [C.map, ...C.extra] : [];
   el.innerHTML = `
-    <div class="ampel ${level}"><span class="dot"></span><div><b>${title}</b><div class="small">${C ? C.flag + " " + C.name : state.countryName ? esc(state.countryName) + " – für dieses Land sind keine Regeln hinterlegt" : "Land wird ermittelt …"} · gilt für den markierten Punkt</div></div></div>
+    <div class="ampel ${A.level}"><span class="dot"></span><div><b>${A.title}</b><div class="small">${C ? C.flag + " " + C.name : state.countryName ? esc(state.countryName) + " – für dieses Land sind keine Regeln hinterlegt" : "Land wird ermittelt …"} · gilt für den markierten Punkt</div></div></div>
     <ul class="checks">
-      <li class="${af.level}">${af.text}</li>
-      <li class="${protLevel}">${protTxt}</li>
+      ${A.items.map((x) => `<li class="${x.level}">${x.html}</li>`).join("")}
       <li class="${elev < 0 ? "warn" : "ok"}">${elev < 0 ? "Dunkel: grünes Blinklicht unter der Drohne einschalten, Drohne immer in Sichtweite halten" : "Tageslicht"}</li>
       <li class="${windWarn ? "bad" : gust != null && gust > 8 ? "warn" : "ok"}">Wind ${fmt(wind, 1)} m/s, Böen ${fmt(gust, 1)} m/s in 10 m Höhe${windWarn ? " – zu stark für die meisten Drohnen unter 250 g" : ""} (in 120 m Höhe meist stärker)</li>
       <li class="${temp != null && temp < 0 ? "warn" : "ok"}">Temperatur ${fmt(temp, 1)} °C${temp != null && temp < 0 ? " – Akkus warm halten, Flugzeit deutlich kürzer" : ""}</li>
     </ul>
-    <p class="small muted">Nicht enthalten: kurzfristige Sperrungen (z. B. Rettungseinsätze), militärische Gebiete, Kraftwerke, Gefängnisse, Wohngebiete und Zonen mit Kameraverbot. ${cc === "de" ? "Die amtlichen dipul-Zonen siehst du als Ebene auf der Karte. " : ""}Die App ersetzt nicht die offizielle Karte:</p>
+    <p class="small muted">${cc === "de" ? "In Deutschland kommen die Zonen direkt aus der amtlichen dipul-Karte der DFS, temporäre Sperrungen eingeschlossen. Prüf vor dem Flug trotzdem die Karte selbst:" : "Nicht enthalten: kurzfristige Sperrungen (z. B. Rettungseinsätze), militärische Gebiete, Kraftwerke, Gefängnisse, Wohngebiete und Zonen mit Kameraverbot. Die App ersetzt nicht die offizielle Karte:"}</p>
     <div class="row wrap">${links.map((l, i) => `<a class="btn small${i ? " ghost" : ""}" href="${l.url}">${esc(l.label)}</a>`).join("")}</div>`;
 }
 
@@ -1639,17 +1696,8 @@ function placeInfoHTML(lat, lon, info) {
   const pVis = aur && c ? visibility(aur.eff, c.cloud_cover, elev) : null;
   const here = state.pos;
   const C = COUNTRIES[info.country];
-  const af = info.country !== null ? airfieldCheck(info.country, lat, lon) : null;
-  const prot = (info.prot?.list || []).map((x) => ({ ...x, rule: protectedRule(info.country, x) }));
-  const protLevel = prot.some((x) => x.rule.level === "bad") ? "bad" : prot.length ? "warn" : info.prot ? "ok" : "warn";
-  let droneLvl = "orange", droneTitle = "wird geprüft …";
-  if (info.prot || info.protErr) {
-    if (af?.level === "bad" || protLevel === "bad") { droneLvl = "red"; droneTitle = af?.level === "bad" ? "Genehmigung nötig" : "ohne Erlaubnis verboten"; }
-    else if (prot.length) { droneLvl = "orange"; droneTitle = "Schutzgebiet – Regeln prüfen"; }
-    else if (af?.level === "warn") { droneLvl = "orange"; droneTitle = "Flugplatz in der Nähe"; }
-    else if (info.protErr || !C) { droneLvl = "orange"; droneTitle = "nicht vollständig geprüft"; }
-    else { droneLvl = "green"; droneTitle = "keine bekannte Sperrzone"; }
-  }
+  const A = info.country === null ? { level: "orange", title: "wird geprüft …", items: [] }
+    : assessDrone(info.country, lat, lon, info.prot ? info.prot : info.protErr ? { error: info.protErr } : null);
   const trend = info.w?.hourly?.cloud_cover?.slice(1, 5) || [];
   const dist = here ? `${fmt(distKm(here.lat, here.lon, lat, lon), distKm(here.lat, here.lon, lat, lon) < 10 ? 1 : 0)} km ${compass(bearingDeg(here.lat, here.lon, lat, lon))} von ${esc(here.label)}` : "";
   return `
@@ -1667,9 +1715,8 @@ function placeInfoHTML(lat, lon, info) {
         <div><span>Sonne</span><b>${fmt(elev, 0)}°</b></div>
       </div>
       ${c ? `<div class="muted">tief ${fmt(c.cloud_cover_low)} % · mittel ${fmt(c.cloud_cover_mid)} % · hoch ${fmt(c.cloud_cover_high)} %${trend.length ? `<br>nächste Stunden: ${trend.map((x) => fmt(x) + " %").join(", ")}` : ""}</div>` : info.wErr ? `<div class="err">Wetter nicht geladen</div>` : ""}
-      <div class="pidrone ${droneLvl}"><span class="dot"></span><div><b>Drohne: ${droneTitle}</b>
-        ${af ? `<div>${af.text}</div>` : ""}
-        ${prot.length ? `<div>${prot.map((x) => esc(x.name)).join(", ")}: ${esc((prot.find((x) => x.rule.level === "bad") || prot[0]).rule.short)}</div>` : info.prot ? `<div>Kein Schutzgebiet gefunden.</div>` : info.protErr ? `<div>Schutzgebiete nicht abfragbar.</div>` : ""}
+      <div class="pidrone ${A.level}"><span class="dot"></span><div><b>Drohne: ${A.title}</b>
+        ${A.items.map((x) => `<div>${x.short}</div>`).join("")}
         ${c ? `<div>Böen ${fmt(c.wind_gusts_10m, 1)} m/s · ${fmt(c.temperature_2m, 1)} °C</div>` : ""}
         ${C ? `<div><a href="${C.map.url}">${esc(C.map.label)}</a></div>` : ""}
       </div></div>
