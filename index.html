@@ -2072,7 +2072,8 @@ function renderGaps() {
   if (posMarker) posMarker.bringToFront();
   const here = g.grid.reduce((a, b) => (b.d < a.d ? b : a));
   const cand = g.grid.filter((q) => q.land && q.d > 3);
-  cand.sort((a, b) => (b.score[h] - b.d * 0.0015) - (a.score[h] - a.d * 0.0015));
+  const key = (q) => q.score[h] - q.d * 0.0015 + (1 - q.cc[h] / 100) * 0.001;
+  cand.sort((a, b) => key(b) - key(a));
   const top = [];
   for (const q of cand) { if (top.every((x) => distKm(x.lat, x.lon, q.lat, q.lon) > g.R / 3)) top.push(q); if (top.length === 3) break; }
   top.forEach((q, i) => {
@@ -2170,7 +2171,9 @@ async function loadRoads() {
       if (seen.has(key)) { const o = msgs.find((x) => x.key === key); if (o && cls.order < o.cls.order) { o.cls = cls; o.pr = pr; } continue; }
       seen.add(key); m.key = key; msgs.push(m);
     }
-    msgs.sort((a, b) => a.cls.order - b.cls.order || a.d - b.d);
+    // Wichtigkeit: Art der Meldung, Entfernung, gerade in Kraft
+    const rank = (m) => m.cls.order * 40 + m.d + (m.pr.ACTIVE === 0 ? 30 : 0);
+    msgs.sort((a, b) => rank(a) - rank(b));
     const stations = (wx.features || []).map((f) => {
       const pr = f.properties, c = f.geometry?.coordinates || [];
       const lat = c[0], lon = c[1];
@@ -2216,7 +2219,7 @@ function renderRoads() {
   const important = near.filter((m) => m.cls.order <= 2);
   const rest = near.filter((m) => m.cls.order > 2);
   const item = (m) => `<li class="${m.cls.level}"><b>${esc(m.cls.label)}</b> · ${esc(m.pr.ROAD_NUMBER || "")} ${esc(m.pr.LOCATION_DESCRIPTION || "")} <span class="muted">(${fmt(m.d)} km)</span>
-      <div class="muted small">${esc(m.pr.DESCRIPTION || "").replace(/\|/g, " ")}${m.pr.END_TIME ? ` · bis ${fmtNoTime(m.pr.END_TIME)}` : ""}${m.pr.ACTIVE === 0 ? " · gerade nicht aktiv" : ""}</div></li>`;
+      <div class="muted small">${esc(m.pr.DESCRIPTION || "").replace(/\|/g, " ")}${m.pr.END_TIME ? ` · bis ${fmtNoTime(m.pr.END_TIME)}` : ""}${m.pr.ACTIVE === 0 ? " · gilt zeitweise, gerade nicht in Kraft" : ""}</div></li>`;
   const st = r.stations.slice(0, 4);
   el.innerHTML = `
     ${important.length ? `<ul class="checks">${important.slice(0, 8).map(item).join("")}</ul>` : `<p class="small">Keine Sperrungen, Kolonnen oder Glätte-Meldungen im Umkreis von 150 km.</p>`}
