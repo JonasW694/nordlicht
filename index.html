@@ -1162,8 +1162,9 @@ function dipulText(z) {
   const t = DIPUL_TEXT[z.type_code];
   const lvl = t ? t[0] : "warn";
   const txt = t ? t[1] : "Einschränkung nach § 21h LuftVO (meist 100 m Abstand), Details in der dipul-Karte";
-  const label = z.type_code.charAt(0) + z.type_code.slice(1).toLowerCase().replace(/ue/g, "ü").replace(/ae/g, "ä").replace(/oe/g, "ö");
-  return { level: lvl, text: `<b>${esc(label)}${z.name ? " „" + esc(z.name) + "“" : ""}</b>: ${txt}` };
+  const NAMES = { "FFH-GEBIET": "FFH-Gebiet", FLUGHAFEN: "Flughafen", FLUGPLATZ: "Flugplatz", KONTROLLZONE: "Kontrollzone", NATURSCHUTZGEBIET: "Naturschutzgebiet", NATIONALPARK: "Nationalpark", VOGELSCHUTZGEBIET: "Vogelschutzgebiet", WOHNGRUNDSTUECK: "Wohngebiet", FLUGBESCHRAENKUNGSGEBIET: "Flugbeschränkungsgebiet" };
+  const label = NAMES[z.type_code] || z.type_code.charAt(0) + z.type_code.slice(1).toLowerCase().replace(/ue/g, "ü").replace(/ae/g, "ä").replace(/oe/g, "ö").replace(/_/g, " ");
+  return { level: lvl, text: `<b>${esc(label)}${z.name ? " „" + esc(z.name) + "“" : ""}</b>: ${txt.replace(new RegExp("^" + label + "(-Bereich)?( \\([^)]*\\))?: "), "")}` };
 }
 
 // Alle Schutzgebiete am Punkt: Naturbase (NO) + EEA Natura 2000 (EU) + EEA nationale Schutzgebiete (CDDA)
@@ -1181,7 +1182,7 @@ async function queryProtected(lat, lon, country) {
   const seen = new Set(), list = [];
   for (const r of ok) for (const x of r.value) {
     const key = x.name.toLowerCase();
-    if (seen.has(key)) continue;
+    if (seen.has(key) || list.some((y) => { const k = y.name.toLowerCase(); return k.startsWith(key) || key.startsWith(k); })) continue;
     seen.add(key); list.push(x);
   }
   return { list, partial: ok.length < res.length };
